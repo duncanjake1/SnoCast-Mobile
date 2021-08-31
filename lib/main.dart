@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'routes/loading_screen.dart';
+import 'package:native_snocast/routes/loading_screen.dart';
+import 'package:native_snocast/routes/map_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -11,9 +12,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: LoadingScreen.id,
+      // initialRoute: LoadingScreen.id,
+      initialRoute: MapScreen.id,
       routes: {
         LoadingScreen.id: (context) => LoadingScreen(),
+        MapScreen.id: (context) => MapScreen(),
       },
     );
   }
