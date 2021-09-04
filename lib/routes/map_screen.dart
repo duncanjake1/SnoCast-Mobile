@@ -10,19 +10,36 @@ class MapScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: Text('snocast'),
+        // elevation = 0 gets rid of appBar shadow
+        elevation: 0,
+        backgroundColor: Color(0x00000000),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: <Color>[
+              Color(0xFF999999),
+              Color(0x00000000),
+            ],
+          )),
+        ),
+        leading: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Hero(
+            tag: 'snowflake',
+            child: SvgPicture.asset(
+              "assets/snowflake.svg",
+              color: Colors.white,
+              height: 70.0,
+            ),
+          ),
+        ),
       ),
       backgroundColor: Colors.black,
       body: MapEmbed(),
     );
   }
 }
-// Hero(
-//         tag: 'snowflake',
-//         child: SvgPicture.asset(
-//           "assets/snowflake.svg",
-//           color: Colors.white,
-//           height: 70.0,
-//         ),
-//       ),

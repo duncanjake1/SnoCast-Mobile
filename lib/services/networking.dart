@@ -6,9 +6,11 @@ class NetworkHelper {
 
   final String url;
 
-  Future getData() async {
+  Future<List> getData() async {
     if (url == '') {
-      return 'ERROR: empty url';
+      return [
+        {'ERR': 'Url Empty'}
+      ];
     }
     http.Response response = await http.get(
       Uri.parse(url),
@@ -16,13 +18,19 @@ class NetworkHelper {
     if (response.statusCode == 200) {
       try {
         String data = response.body;
-        var decodedData = jsonDecode(data);
+        List decodedData = json.decode(data);
         return decodedData;
       } catch (e) {
-        return 'Exception Occured: $e';
+        print(e);
+        return [
+          {'ERR': 'Could not json decode payload'}
+        ];
       }
     } else {
       print(response.statusCode);
+      return [
+        {'ERR': 'Could not connect'}
+      ];
     }
   }
 }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:native_snocast/main.dart';
+import 'package:provider/provider.dart';
 
 import 'package:native_snocast/constants.dart';
 import 'package:native_snocast/components/animated_snowflake.dart';
@@ -20,10 +22,15 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
   void getBulkData() async {
     NetworkHelper networkHelper =
-        NetworkHelper(url: 'http://10.0.2.2:8000/api/accidents/');
+        NetworkHelper(url: kBaseURL + kAccidentEndpoint);
     var bulkData = await networkHelper.getData();
-    print(bulkData);
-    Navigator.pushNamed(context, MapScreen.id);
+    Provider.of<SnoCastData>(context, listen: false).updateData(bulkData);
+    // destorys the loading screen and pushes map screen
+    // TODO: remove forced delay
+    await Future.delayed(
+      Duration(seconds: 3),
+    );
+    Navigator.pushNamedAndRemoveUntil(context, MapScreen.id, (route) => false);
   }
 
   @override
