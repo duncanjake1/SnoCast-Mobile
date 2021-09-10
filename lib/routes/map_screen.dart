@@ -1,8 +1,10 @@
 import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
+import 'package:provider/provider.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:native_snocast/components/map_embed.dart';
+import 'package:native_snocast/main.dart' show SnoCastData;
 
 class MapScreen extends StatelessWidget {
   static const String id = 'map_screen';
@@ -39,7 +41,20 @@ class MapScreen extends StatelessWidget {
         ),
       ),
       backgroundColor: Colors.black,
-      body: MapEmbed(),
+      body: FlutterMap(
+        options: MapOptions(
+          center: LatLng(37, -108),
+          zoom: 4,
+        ),
+        layers: [
+          TileLayerOptions(
+              urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+              subdomains: ['a', 'b', 'c']),
+          MarkerLayerOptions(
+            markers: Provider.of<SnoCastData>(context).getMapMarkerData(),
+          ),
+        ],
+      ),
     );
   }
 }

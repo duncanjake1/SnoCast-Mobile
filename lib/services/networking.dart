@@ -12,22 +12,30 @@ class NetworkHelper {
         {'ERR': 'Url Empty'}
       ];
     }
-    http.Response response = await http.get(
-      Uri.parse(url),
-    );
-    if (response.statusCode == 200) {
-      try {
-        String data = response.body;
-        List decodedData = json.decode(data);
-        return decodedData;
-      } catch (e) {
-        print(e);
+    // Try HTTP request. Create Error Responses if unsuccesful
+    try {
+      http.Response response = await http.get(
+        Uri.parse(url),
+      );
+      if (response.statusCode == 200) {
+        try {
+          String data = response.body;
+          List decodedData = json.decode(data);
+          return decodedData;
+        } catch (e) {
+          print(e);
+          return [
+            {'ERR': 'Could not json decode payload'}
+          ];
+        }
+      } else {
+        print(response.statusCode);
         return [
-          {'ERR': 'Could not json decode payload'}
+          {'ERR': 'Invalid response'}
         ];
       }
-    } else {
-      print(response.statusCode);
+    } catch (e) {
+      print('ERR: $e');
       return [
         {'ERR': 'Could not connect'}
       ];

@@ -8,6 +8,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:native_snocast/routes/loading_screen.dart';
 import 'package:native_snocast/routes/map_screen.dart';
 import 'constants.dart';
+import 'components/map_marker.dart';
 
 void main() {
   runApp(MyApp());
@@ -57,35 +58,10 @@ class SnoCastData extends ChangeNotifier {
         double lat = double.parse(_bulkData![i]['latitude']);
         double long = double.parse(_bulkData![i]['longitude']);
 
-        mapMarkers.add(
-          Marker(
-            width: kUnfocusedMarkerSize,
-            height: kUnfocusedMarkerSize,
-            point: LatLng(lat, long),
-            builder: (ctx) => Container(
-              child: Stack(
-                children: [
-                  // Marker fill
-                  Positioned.fill(
-                    child: Icon(
-                      Icons.location_on_sharp,
-                      color: Colors.lightBlue.withOpacity(.8),
-                      size: kUnfocusedMarkerSize,
-                    ),
-                  ),
-                  // Marker outline
-                  Icon(
-                    Icons.location_on_outlined,
-                    color: Colors.black,
-                    size: kUnfocusedMarkerSize,
-                  ),
-                ],
-              ),
-            ),
-            // TODO: figure out what the anchor point will be (Bottom of pin must always be on location)
-            anchorPos: AnchorPos.exactly(Anchor(30, 30)),
-          ),
-        );
+        MapMarker mapMarker = MapMarker(
+            key: key, isFocused: false, latitude: lat, longitude: long);
+
+        mapMarkers.add(mapMarker.createMarker());
       }
       return mapMarkers;
     } else {

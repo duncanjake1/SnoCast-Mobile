@@ -30,7 +30,13 @@ class _LoadingScreenState extends State<LoadingScreen> {
     await Future.delayed(
       Duration(seconds: 3),
     );
-    Navigator.pushNamedAndRemoveUntil(context, MapScreen.id, (route) => false);
+    if (bulkData[0].keys.first == 'ERR') {
+      // TODO: Add text widget that let's user know that connection failed
+      print('Exception Handled');
+    } else {
+      Navigator.pushNamedAndRemoveUntil(
+          context, MapScreen.id, (route) => false);
+    }
   }
 
   @override
