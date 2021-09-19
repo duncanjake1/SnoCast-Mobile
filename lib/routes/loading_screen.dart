@@ -15,6 +15,8 @@ class LoadingScreen extends StatefulWidget {
 }
 
 class _LoadingScreenState extends State<LoadingScreen> {
+  bool connectionIsRetrying = false;
+
   void initState() {
     super.initState();
     getBulkData();
@@ -25,26 +27,82 @@ class _LoadingScreenState extends State<LoadingScreen> {
         NetworkHelper(url: kBaseURL + kAccidentEndpoint);
     var bulkData = await networkHelper.getData();
     Provider.of<SnoCastData>(context, listen: false).updateData(bulkData);
-    // destorys the loading screen and pushes map screen
-    // TODO: remove forced delay
-    await Future.delayed(
-      Duration(seconds: 3),
-    );
     if (bulkData[0].keys.first == 'ERR') {
-      // TODO: Add text widget that let's user know that connection failed
-      print('Exception Handled');
+      showConnectionError();
     } else {
+      // destorys the loading screen and pushes map screen
       Navigator.pushNamedAndRemoveUntil(
           context, MapScreen.id, (route) => false);
     }
+  }
+
+  void showConnectionError() {
+    setState(() {
+      // ensure 'Retrying...' message is hidden
+      connectionIsRetrying = false;
+    });
+
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          height: 200,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(15),
+              topRight: Radius.circular(15),
+            ),
+          ),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                const Text('Unable to connect to server'),
+                ElevatedButton(
+                  child: const Text('Try again?'),
+                  onPressed: () {
+                    setState(() {
+                      // shows 'Retrying...' text
+                      connectionIsRetrying = true;
+                    });
+                    // Retry connection
+                    getBulkData();
+                    Navigator.pop(context);
+                  },
+                )
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kLoadingScreenColor,
-      body: Center(
-        child: AnimatedSnowflake(),
+      body: Stack(
+        children: [
+          Container(
+            alignment: Alignment.topCenter,
+            margin: EdgeInsets.only(top: 30),
+            child: Text(
+              'Retrying...',
+              style: TextStyle(
+                color:
+                    connectionIsRetrying ? Colors.white : kLoadingScreenColor,
+                fontSize: 35,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+          Center(
+            child: AnimatedSnowflake(),
+          ),
+        ],
       ),
     );
   }

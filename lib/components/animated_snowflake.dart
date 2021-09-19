@@ -97,7 +97,7 @@ class _AnimatedSnowflakeState extends State<AnimatedSnowflake>
             height: 40.0,
             width: easeAnimationCurve.value * 40 + 150,
           ),
-        )
+        ),
       ],
     );
   }

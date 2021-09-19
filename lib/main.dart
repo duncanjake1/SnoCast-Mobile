@@ -3,11 +3,9 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong2/latlong.dart';
 
 import 'package:native_snocast/routes/loading_screen.dart';
 import 'package:native_snocast/routes/map_screen.dart';
-import 'constants.dart';
 import 'components/map_marker.dart';
 
 void main() {
@@ -33,6 +31,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
+// TODO: put this into it's own class
 class SnoCastData extends ChangeNotifier {
   List? _bulkData;
 
@@ -69,17 +68,3 @@ class SnoCastData extends ChangeNotifier {
     }
   }
 }
-
-
-// theme: ThemeData(
-//         // This is the theme of your application.
-//         //
-//         // Try running your application with "flutter run". You'll see the
-//         // application has a blue toolbar. Then, without quitting the app, try
-//         // changing the primarySwatch below to Colors.green and then invoke
-//         // "hot reload" (press "r" in the console where you ran "flutter run",
-//         // or simply save your changes to "hot reload" in a Flutter IDE).
-//         // Notice that the counter didn't reset back to zero; the application
-//         // is not restarted.
-//         primarySwatch: Colors.blue,
-//       ),
