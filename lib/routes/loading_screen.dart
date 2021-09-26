@@ -27,6 +27,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
         NetworkHelper(url: kBaseURL + kAccidentEndpoint);
     var bulkData = await networkHelper.getData();
     Provider.of<SnoCastData>(context, listen: false).updateData(bulkData);
+    Provider.of<SnoCastData>(context, listen: false).generateMapMarkers();
     if (bulkData[0].keys.first == 'ERR') {
       showConnectionError();
     } else {

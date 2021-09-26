@@ -6,18 +6,8 @@ To solve the multiple markers focused problem, we can store a value 'isFocused' 
 Every time the user clicks a marker, we iterate through the marker list until we find one with 'widget.isFocused = true'
 Once we find one that isFocused and is not the current requested marker, we can flip the isFocused value and end the loop
 
-
-On marker tap, search through marker list
-
-
-
-HOW DO WE GET THE isFocused PROPERTY OUT OF THE WIDGET BUILDER
-
-One idea would be to put the key and value of isFocused propery into a Provider
-Iterate through that list, and find the key value that relates  to the Map Marker we need to unFocus
-Then, iterate through the Markers list until you find the one with the right key.
-the flip the isFocused propery
------ this seems like it is probably an unnecessary step. there's probably a way to do it while ONLY iterating over the Marker list
-
-
-Wash your damn keyboard and screen
+----------------------------------------------------------------
+I might be going about the defocusOldMarker stuff the wrong way
+ 
+change IndividualMarker into a stateless class
+destroy and rebuid the marker that we need to

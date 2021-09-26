@@ -12,7 +12,7 @@ class MapMarker {
 
   Marker createMarker() {
     // Generate Unique key for each marker
-    Key markerKey = UniqueKey();
+    final Key markerKey = UniqueKey();
 
     return Marker(
       // Generate unique key for each Marker. Used for marker search
@@ -28,15 +28,6 @@ class MapMarker {
       // I don't think the above line is needed (I think this can be included in IndividualMarker's state)
       // need to use some kind of widget (think alignment tween) to make marker expand but pin point does not move
     );
-  }
-
-  void searchMarkers(List<Marker> markerList) {
-    print(markerList[0].builder.toString());
-//	for(int i = 0; i < markerList.length; i++){
-//		if (markerList[i].builder.toString){
-//
-//		}
-//	}
   }
 }
 
@@ -60,7 +51,6 @@ class _IndividualMarkerState extends State<IndividualMarker> {
         setState(() {
           isFocused = !isFocused;
         });
-        print(widget.key);
       },
       child: Container(
         child: Stack(

@@ -34,6 +34,7 @@ class MyApp extends StatelessWidget {
 // TODO: put this into it's own file
 class SnoCastData extends ChangeNotifier {
   List? _bulkData;
+  List<Marker>? _markerList;
 
   void updateData(List payload) {
     _bulkData = payload;
@@ -48,8 +49,8 @@ class SnoCastData extends ChangeNotifier {
     }
   }
 
-  // TODO: separate this out into generateMapMarkers and getMapMarkers functions
-  List<Marker> getMapMarkerData() {
+  // create list of map markers
+  void generateMapMarkers() {
     List<Marker> mapMarkers = [];
     if (_bulkData != null) {
       for (int i = 0; i < _bulkData!.length; i++) {
@@ -61,9 +62,18 @@ class SnoCastData extends ChangeNotifier {
 
         mapMarkers.add(mapMarker.createMarker());
       }
-      return mapMarkers;
+      _markerList = mapMarkers;
+      print(_markerList);
+      notifyListeners();
+    }
+  }
+
+  // return map marker list
+  UnmodifiableListView<Marker> get markerList {
+    if (_markerList == null) {
+      return UnmodifiableListView([]);
     } else {
-      return [];
+      return UnmodifiableListView(_markerList!);
     }
   }
 }
