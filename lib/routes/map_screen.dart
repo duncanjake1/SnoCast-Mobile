@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:native_snocast/main.dart' show SnoCastData;
 
+// TODO: implement flutter_map_tile_caching to implement offline features
+
 class MapScreen extends StatelessWidget {
   static const String id = 'map_screen';
 
@@ -73,8 +75,7 @@ class MapScreen extends StatelessWidget {
             // Create button for marker cluster
             builder: (context, markers) {
               return Material(
-                type: MaterialType
-                    .transparency, //Makes it usable on any background color, thanks @IanSmith
+                type: MaterialType.transparency,
                 child: Ink(
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.black, width: 4.0),
@@ -92,8 +93,7 @@ class MapScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    borderRadius: BorderRadius.circular(
-                        1000.0), //Something large to ensure a circle
+                    borderRadius: BorderRadius.circular(1000.0),
                   ),
                 ),
               );

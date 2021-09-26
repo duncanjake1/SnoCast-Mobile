@@ -31,13 +31,12 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// TODO: put this into it's own class
+// TODO: put this into it's own file
 class SnoCastData extends ChangeNotifier {
   List? _bulkData;
 
   void updateData(List payload) {
     _bulkData = payload;
-    print('Bulk data is ... $_bulkData');
     notifyListeners();
   }
 
@@ -49,16 +48,16 @@ class SnoCastData extends ChangeNotifier {
     }
   }
 
+  // TODO: separate this out into generateMapMarkers and getMapMarkers functions
   List<Marker> getMapMarkerData() {
     List<Marker> mapMarkers = [];
     if (_bulkData != null) {
       for (int i = 0; i < _bulkData!.length; i++) {
-        int key = i;
         double lat = double.parse(_bulkData![i]['latitude']);
         double long = double.parse(_bulkData![i]['longitude']);
 
-        MapMarker mapMarker = MapMarker(
-            key: key, isFocused: false, latitude: lat, longitude: long);
+        MapMarker mapMarker =
+            MapMarker(isFocused: false, latitude: lat, longitude: long);
 
         mapMarkers.add(mapMarker.createMarker());
       }
