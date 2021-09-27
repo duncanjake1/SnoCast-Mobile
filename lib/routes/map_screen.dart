@@ -1,11 +1,11 @@
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:native_snocast/controllers/map_marker_controller.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:native_snocast/main.dart' show SnoCastData;
 
 // TODO: implement flutter_map_tile_caching to implement offline features
 class MapScreen extends StatelessWidget {
@@ -65,7 +65,7 @@ class MapScreen extends StatelessWidget {
             fitBoundsOptions: FitBoundsOptions(
               padding: EdgeInsets.all(50),
             ),
-            markers: Provider.of<SnoCastData>(context).markerList,
+            markers: Provider.of<MapMarkerController>(context).markerList,
             // Polygon animation is ugly. Making it transparent.
             polygonOptions: PolygonOptions(
                 borderColor: Color(0x00000000),

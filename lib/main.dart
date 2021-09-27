@@ -1,6 +1,8 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
+import 'package:native_snocast/controllers/bulk_data_controller.dart';
+import 'package:native_snocast/controllers/map_marker_controller.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_map/flutter_map.dart';
 
@@ -16,8 +18,13 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<SnoCastData>(
-      create: (context) => SnoCastData(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<MapMarkerController>(
+            create: (context) => MapMarkerController()),
+        ChangeNotifierProvider<BulkDataController>(
+            create: (context) => BulkDataController()),
+      ],
       child: MaterialApp(
         // initialRoute: LoadingScreen.id,
         debugShowCheckedModeBanner: false,
@@ -28,52 +35,5 @@ class MyApp extends StatelessWidget {
         },
       ),
     );
-  }
-}
-
-// TODO: put this into it's own file
-class SnoCastData extends ChangeNotifier {
-  List? _bulkData;
-  List<Marker>? _markerList;
-
-  void updateData(List payload) {
-    _bulkData = payload;
-    notifyListeners();
-  }
-
-  UnmodifiableListView get bulkData {
-    if (_bulkData == null) {
-      return UnmodifiableListView({});
-    } else {
-      return UnmodifiableListView(_bulkData!);
-    }
-  }
-
-  // create list of map markers
-  void generateMapMarkers() {
-    List<Marker> mapMarkers = [];
-    if (_bulkData != null) {
-      for (int i = 0; i < _bulkData!.length; i++) {
-        double lat = double.parse(_bulkData![i]['latitude']);
-        double long = double.parse(_bulkData![i]['longitude']);
-
-        MapMarker mapMarker =
-            MapMarker(isFocused: false, latitude: lat, longitude: long);
-
-        mapMarkers.add(mapMarker.createMarker());
-      }
-      _markerList = mapMarkers;
-      print(_markerList);
-      notifyListeners();
-    }
-  }
-
-  // return map marker list
-  UnmodifiableListView<Marker> get markerList {
-    if (_markerList == null) {
-      return UnmodifiableListView([]);
-    } else {
-      return UnmodifiableListView(_markerList!);
-    }
   }
 }

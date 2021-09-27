@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:native_snocast/main.dart';
 import 'package:provider/provider.dart';
 
 import 'package:native_snocast/constants.dart';
 import 'package:native_snocast/components/animated_snowflake.dart';
 import 'package:native_snocast/routes/map_screen.dart';
 import 'package:native_snocast/services/networking.dart';
+import 'package:native_snocast/controllers/map_marker_controller.dart';
+import 'package:native_snocast/controllers/bulk_data_controller.dart';
 
 class LoadingScreen extends StatefulWidget {
   static const String id = 'loading_screen';
@@ -26,8 +27,10 @@ class _LoadingScreenState extends State<LoadingScreen> {
     NetworkHelper networkHelper =
         NetworkHelper(url: kBaseURL + kAccidentEndpoint);
     var bulkData = await networkHelper.getData();
-    Provider.of<SnoCastData>(context, listen: false).updateData(bulkData);
-    Provider.of<SnoCastData>(context, listen: false).generateMapMarkers();
+    Provider.of<BulkDataController>(context, listen: false)
+        .updateData(bulkData);
+    Provider.of<MapMarkerController>(context, listen: false)
+        .generateMapMarkers(bulkData);
     if (bulkData[0].keys.first == 'ERR') {
       showConnectionError();
     } else {

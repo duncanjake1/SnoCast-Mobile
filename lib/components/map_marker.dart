@@ -7,6 +7,7 @@ class MapMarker {
   final double latitude;
   final double longitude;
   final bool isFocused;
+  // define default values (prevent null)
   MapMarker(
       {this.latitude = 82.68, this.longitude = 135.00, this.isFocused = false});
 
@@ -22,7 +23,9 @@ class MapMarker {
       point: LatLng(latitude, longitude),
       rotate: false,
       anchorPos: AnchorPos.exactly(Anchor(1.0, 1.0)),
-      builder: (ctx) => IndividualMarker(key: markerKey),
+      builder: (ctx) => IndividualMarker(
+        isFocused: isFocused,
+      ),
       // TODO: figure out what the anchor point will be (Bottom of pin must always be on location)
       // TODO: must have some sort of state here to update anchor point when the
       // I don't think the above line is needed (I think this can be included in IndividualMarker's state)
@@ -31,26 +34,17 @@ class MapMarker {
   }
 }
 
-class IndividualMarker extends StatefulWidget {
-  // No possible way (as far as I can tell) for key to be null
-  final Key? key;
-  IndividualMarker({this.key});
-
-  @override
-  _IndividualMarkerState createState() => _IndividualMarkerState();
-}
-
-class _IndividualMarkerState extends State<IndividualMarker> {
-  bool isFocused = false;
+class IndividualMarker extends StatelessWidget {
+  final bool isFocused;
+  IndividualMarker({required this.isFocused});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
-        setState(() {
-          isFocused = !isFocused;
-        });
+        print('hello');
+        // Call the marker controller to destroy and rebuild widget
       },
       child: Container(
         child: Stack(
