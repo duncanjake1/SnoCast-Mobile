@@ -1,30 +1,29 @@
+import 'package:provider/provider.dart';
+
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:native_snocast/constants.dart';
+import 'package:native_snocast/controllers/map_marker_controller.dart';
 
 class MapMarker {
-  final double latitude;
-  final double longitude;
   final bool isFocused;
+  final LatLng point;
+  final Key key;
   // define default values (prevent null)
-  MapMarker(
-      {this.latitude = 82.68, this.longitude = 135.00, this.isFocused = false});
+  MapMarker({required this.isFocused, required this.point, required this.key});
 
   Marker createMarker() {
-    // Generate Unique key for each marker
-    final Key markerKey = UniqueKey();
-
     return Marker(
-      // Generate unique key for each Marker. Used for marker search
-      key: markerKey,
-      width: kUnfocusedMarkerSize,
-      height: kUnfocusedMarkerSize,
-      point: LatLng(latitude, longitude),
+      key: key,
+      width: isFocused ? kFocusedMarkerSize : kUnfocusedMarkerSize,
+      height: isFocused ? kFocusedMarkerSize : kUnfocusedMarkerSize,
+      point: point,
       rotate: false,
       anchorPos: AnchorPos.exactly(Anchor(1.0, 1.0)),
       builder: (ctx) => IndividualMarker(
         isFocused: isFocused,
+        key: key,
       ),
       // TODO: figure out what the anchor point will be (Bottom of pin must always be on location)
       // TODO: must have some sort of state here to update anchor point when the
@@ -36,15 +35,17 @@ class MapMarker {
 
 class IndividualMarker extends StatelessWidget {
   final bool isFocused;
-  IndividualMarker({required this.isFocused});
+  final Key key;
+  IndividualMarker({required this.isFocused, required this.key});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
-        print('hello');
         // Call the marker controller to destroy and rebuild widget
+        Provider.of<MapMarkerController>(context, listen: false)
+            .toggleFocus(key);
       },
       child: Container(
         child: Stack(

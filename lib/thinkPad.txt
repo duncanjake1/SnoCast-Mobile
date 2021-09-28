@@ -11,3 +11,8 @@ I might be going about the defocusOldMarker stuff the wrong way
  
 change IndividualMarker into a stateless class
 destroy and rebuid the marker that we need to
+
+
+
+----------------------------------------------------------------
+map marker onPress: call provider function that toggles isFocused of current marker and old marker. Then destorys and rebuilds those markers

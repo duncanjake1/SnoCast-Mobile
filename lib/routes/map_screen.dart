@@ -15,7 +15,7 @@ class MapScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      // TODO: consider making appbar transparent, and surrounding icons in nice looking container
+      // TODO: consider making appbar fully transparent, and surrounding icons in nice looking container
       appBar: AppBar(
         // elevation = 0 gets rid of appBar shadow
         elevation: 0,
