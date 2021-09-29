@@ -2,18 +2,20 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 
 class BulkDataController extends ChangeNotifier {
-  List? _bulkData;
+  List<Map> _bulkData = [];
 
-  void updateData(List payload) {
-    _bulkData = payload;
+  List insertKeysAndUpdateData(List dataSet) {
+    // Adds a Unique Identifier to each data point.
+    // Neccessary to link map markers to the rest of the data
+    for (Map dataPoint in dataSet) {
+      dataPoint['UID'] = UniqueKey();
+      _bulkData.add(dataPoint);
+    }
     notifyListeners();
+    return _bulkData;
   }
 
   UnmodifiableListView get bulkData {
-    if (_bulkData == null) {
-      return UnmodifiableListView({});
-    } else {
-      return UnmodifiableListView(_bulkData!);
-    }
+    return UnmodifiableListView({});
   }
 }

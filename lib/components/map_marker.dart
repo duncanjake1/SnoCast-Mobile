@@ -44,8 +44,7 @@ class IndividualMarker extends StatelessWidget {
       behavior: HitTestBehavior.translucent,
       onTap: () {
         // Call the marker controller to destroy and rebuild widget
-        Provider.of<MapMarkerController>(context, listen: false)
-            .toggleFocus(key);
+        print('pressed me');
       },
       child: Container(
         child: Stack(

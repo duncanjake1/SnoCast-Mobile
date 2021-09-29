@@ -18,9 +18,10 @@ class MapMarkerController extends ChangeNotifier {
     for (int i = 0; i < bulkData.length; i++) {
       double lat = double.parse(bulkData[i]['latitude']);
       double long = double.parse(bulkData[i]['longitude']);
+      Key uniqueKey = bulkData[i]['UID'];
 
-      MapMarker mapMarker = MapMarker(
-          isFocused: false, point: LatLng(lat, long), key: UniqueKey());
+      MapMarker mapMarker =
+          MapMarker(isFocused: false, point: LatLng(lat, long), key: uniqueKey);
 
       mapMarkers.add(mapMarker.createMarker());
     }
@@ -35,38 +36,5 @@ class MapMarkerController extends ChangeNotifier {
     } else {
       return UnmodifiableListView(_markerList!);
     }
-  }
-
-  void toggleFocus(Key pressedMarkerKey) {
-    if (_markerList != null) {
-      for (int i = 0; i < _markerList!.length; i++) {
-        if (_markerList![i].key == activatedMarkerKey) {
-          // Old marker recreated as unfocused
-          recreateMarker(index: i, setFocused: false);
-          print('I have been reborn a small boy');
-        } else if (pressedMarkerKey == _markerList![i].key) {
-          // new marker recreated as focused
-          recreateMarker(index: i, setFocused: true);
-          print('I have been reborn a large boy');
-        }
-      }
-      // update value of activatedMarkerKey
-      activatedMarkerKey = pressedMarkerKey;
-    } else {
-      // TODO: do something about this
-      print('data is null sowwwyyyyyy');
-    }
-  }
-
-  void recreateMarker({required int index, required bool setFocused}) {
-    Marker oldMarker = _markerList![index];
-    //Create new marker
-    MapMarker newMapMarker = MapMarker(
-        isFocused: setFocused, point: oldMarker.point, key: oldMarker.key!);
-    Marker newMarker = newMapMarker.createMarker();
-    // Destroy old marker
-    _markerList!.removeAt(index);
-    // Place new Marker in List
-    _markerList!.add(newMarker);
   }
 }
