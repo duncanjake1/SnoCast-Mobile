@@ -7,36 +7,36 @@ import 'package:native_snocast/constants.dart';
 import 'package:native_snocast/controllers/map_marker_controller.dart';
 
 class MapMarker {
-  final bool isFocused;
   final LatLng point;
   final Key key;
-  // define default values (prevent null)
-  MapMarker({required this.isFocused, required this.point, required this.key});
+
+  MapMarker({required this.point, required this.key});
 
   Marker createMarker() {
     return Marker(
       key: key,
-      width: isFocused ? kFocusedMarkerSize : kUnfocusedMarkerSize,
-      height: isFocused ? kFocusedMarkerSize : kUnfocusedMarkerSize,
+	  //TODO: figure out if we need to change this width and height
+      width: kFocusedMarkerSize + 20, 
+      height: kFocusedMarkerSize + 20,
       point: point,
       rotate: false,
-      anchorPos: AnchorPos.exactly(Anchor(1.0, 1.0)),
       builder: (ctx) => IndividualMarker(
-        isFocused: isFocused,
         key: key,
       ),
-      // TODO: figure out what the anchor point will be (Bottom of pin must always be on location)
-      // TODO: must have some sort of state here to update anchor point when the
-      // I don't think the above line is needed (I think this can be included in IndividualMarker's state)
-      // need to use some kind of widget (think alignment tween) to make marker expand but pin point does not move
     );
   }
 }
 
-class IndividualMarker extends StatelessWidget {
-  final bool isFocused;
+class IndividualMarker extends StatefulWidget {
   final Key key;
-  IndividualMarker({required this.isFocused, required this.key});
+  IndividualMarker({required this.key});
+
+  @override
+  State<IndividualMarker> createState() => _IndividualMarkerState();
+}
+
+class _IndividualMarkerState extends State<IndividualMarker> {
+  bool isFocused = false;
 
   @override
   Widget build(BuildContext context) {
@@ -44,13 +44,17 @@ class IndividualMarker extends StatelessWidget {
       behavior: HitTestBehavior.translucent,
       onTap: () {
         // Call the marker controller to destroy and rebuild widget
-        print('pressed me');
+		  setState(() {
+		    isFocused = !isFocused;
+		  });
       },
       child: Container(
         child: Stack(
+				alignment: AlignmentDirectional.bottomCenter,
           children: [
             // Marker fill
             Positioned.fill(
+					top: isFocused ? -20 : 0,
               child: Icon(
                 Icons.location_on_sharp,
                 color: Colors.lightBlue,
@@ -58,10 +62,13 @@ class IndividualMarker extends StatelessWidget {
               ),
             ),
             // Marker outline
-            Icon(
-              Icons.location_on_outlined,
-              color: Colors.black,
-              size: isFocused ? kFocusedMarkerSize : kUnfocusedMarkerSize,
+            Positioned.fill(
+					top: isFocused ? -20 : 0,
+              child: Icon(
+                Icons.location_on_outlined,
+                color: Colors.black,
+                size: isFocused ? kFocusedMarkerSize : kUnfocusedMarkerSize,
+              ),
             ),
           ],
         ),

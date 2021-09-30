@@ -21,7 +21,7 @@ class MapMarkerController extends ChangeNotifier {
       Key uniqueKey = bulkData[i]['UID'];
 
       MapMarker mapMarker =
-          MapMarker(isFocused: false, point: LatLng(lat, long), key: uniqueKey);
+          MapMarker(point: LatLng(lat, long), key: uniqueKey);
 
       mapMarkers.add(mapMarker.createMarker());
     }
