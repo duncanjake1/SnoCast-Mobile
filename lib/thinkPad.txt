@@ -7,7 +7,15 @@ Every time the user clicks a marker, we iterate through the marker list until we
 Once we find one that isFocused and is not the current requested marker, we can flip the isFocused value and end the loop
 
 ----------------------------------------------------------------
-I might be going about the defocusOldMarker stuff the wrong way
- 
-change IndividualMarker into a stateless class
-destroy and rebuid the marker that we need to
+map marker onPress: call provider function that toggles isFocused of current marker and old marker. Then destorys and rebuilds those markers
+
+
+----------------------------------------------------------------
+put individual marker back into a statefull class
+state will be used to make the marker grow and shrink
+
+call a controller from the marker
+the map marker controller or bulk controller will ultimately use the key from the marker to build the accident summary
+
+We will need to restructure the bulk data to include a UID for each entry that matches the marker in each data entry
+That way we can search the bulk data for the key, grab the data, and generate whatever we want from that.

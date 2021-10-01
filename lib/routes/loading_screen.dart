@@ -27,10 +27,11 @@ class _LoadingScreenState extends State<LoadingScreen> {
     NetworkHelper networkHelper =
         NetworkHelper(url: kBaseURL + kAccidentEndpoint);
     var bulkData = await networkHelper.getData();
-    Provider.of<BulkDataController>(context, listen: false)
-        .updateData(bulkData);
+    List bulkDataWithKeys =
+        Provider.of<BulkDataController>(context, listen: false)
+            .insertKeysAndUpdateData(bulkData);
     Provider.of<MapMarkerController>(context, listen: false)
-        .generateMapMarkers(bulkData);
+        .generateMapMarkers(bulkDataWithKeys);
     if (bulkData[0].keys.first == 'ERR') {
       showConnectionError();
     } else {
