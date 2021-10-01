@@ -9,14 +9,12 @@ import 'package:native_snocast/controllers/map_marker_controller.dart';
 class MapMarker {
   final LatLng point;
   final Key key;
-
   MapMarker({required this.point, required this.key});
 
   Marker createMarker() {
     return Marker(
       key: key,
-	  //TODO: figure out if we need to change this width and height
-      width: kFocusedMarkerSize + 20, 
+      width: kFocusedMarkerSize + 20,
       height: kFocusedMarkerSize + 20,
       point: point,
       rotate: false,
@@ -40,21 +38,34 @@ class _IndividualMarkerState extends State<IndividualMarker> {
 
   @override
   Widget build(BuildContext context) {
+    Key? currentFocusedMarkerKey =
+        Provider.of<MapMarkerController>(context).getCurrentFocusedMarkerKey;
+    if (widget.key == currentFocusedMarkerKey) {
+      setState(() {
+        isFocused = true;
+      });
+    } else {
+      setState(() {
+        isFocused = false;
+      });
+    }
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
-        // Call the marker controller to destroy and rebuild widget
-		  setState(() {
-		    isFocused = !isFocused;
-		  });
+        // Set current Marker Key to this widgets key
+		  // also sets currentFocusedMarkerKey to null if widget.key and currentFocusedMarkerKey match
+        setState(() {
+          Provider.of<MapMarkerController>(context, listen: false)
+              .setCurrentFocusedMarkerKey = widget.key;
+        });
       },
       child: Container(
         child: Stack(
-				alignment: AlignmentDirectional.bottomCenter,
+          alignment: AlignmentDirectional.bottomCenter,
           children: [
             // Marker fill
             Positioned.fill(
-					top: isFocused ? -20 : 0,
+              top: isFocused ? -20 : 0,
               child: Icon(
                 Icons.location_on_sharp,
                 color: Colors.lightBlue,
@@ -63,7 +74,7 @@ class _IndividualMarkerState extends State<IndividualMarker> {
             ),
             // Marker outline
             Positioned.fill(
-					top: isFocused ? -20 : 0,
+              top: isFocused ? -20 : 0,
               child: Icon(
                 Icons.location_on_outlined,
                 color: Colors.black,
