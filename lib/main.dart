@@ -22,7 +22,6 @@ class MyApp extends StatelessWidget {
             create: (context) => BulkDataController()),
       ],
       child: MaterialApp(
-        // initialRoute: LoadingScreen.id,
         debugShowCheckedModeBanner: false,
         initialRoute: LoadingScreen.id,
         routes: {

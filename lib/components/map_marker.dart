@@ -20,6 +20,7 @@ class MapMarker {
       rotate: false,
       builder: (ctx) => IndividualMarker(
         key: key,
+        point: point,
       ),
     );
   }
@@ -27,7 +28,8 @@ class MapMarker {
 
 class IndividualMarker extends StatefulWidget {
   final Key key;
-  IndividualMarker({required this.key});
+  final LatLng point;
+  IndividualMarker({required this.key, required this.point});
 
   @override
   State<IndividualMarker> createState() => _IndividualMarkerState();
@@ -39,8 +41,10 @@ class _IndividualMarkerState extends State<IndividualMarker> {
   @override
   Widget build(BuildContext context) {
     Key? currentFocusedMarkerKey =
-        Provider.of<MapMarkerController>(context).getCurrentFocusedMarkerKey;
+        Provider.of<MapMarkerController>(context, listen: false).getCurrentFocusedMarkerKey;
     if (widget.key == currentFocusedMarkerKey) {
+      Provider.of<MapMarkerController>(context, listen: false).centerMarkerInMap =
+          widget.point;
       setState(() {
         isFocused = true;
       });
@@ -53,11 +57,9 @@ class _IndividualMarkerState extends State<IndividualMarker> {
       behavior: HitTestBehavior.translucent,
       onTap: () {
         // Set current Marker Key to this widgets key
-		  // also sets currentFocusedMarkerKey to null if widget.key and currentFocusedMarkerKey match
-        setState(() {
-          Provider.of<MapMarkerController>(context, listen: false)
-              .setCurrentFocusedMarkerKey = widget.key;
-        });
+        // also sets currentFocusedMarkerKey to null if widget.key and currentFocusedMarkerKey match
+        Provider.of<MapMarkerController>(context, listen: false)
+            .setCurrentFocusedMarkerKey = widget.key;
       },
       child: Container(
         child: Stack(

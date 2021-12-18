@@ -11,6 +11,8 @@ class MapMarkerController extends ChangeNotifier {
   // this key will be use as the 'old marker key'
   // after old marker key has been deactivated, the new key will replace this value
   Key? _currentFocusedMarkerKey;
+  // initialize point here. Point will be updated on marker onFocus
+  LatLng _centerPoint = LatLng(37, -108);
 
   // create list of map markers
   void generateMapMarkers(List bulkData) {
@@ -49,5 +51,14 @@ class MapMarkerController extends ChangeNotifier {
 
   Key? get getCurrentFocusedMarkerKey {
     return _currentFocusedMarkerKey;
+  }
+
+  set centerMarkerInMap(LatLng point){
+	_centerPoint = point;
+	notifyListeners();
+  }
+
+  LatLng get centerPoint {
+	  return _centerPoint;
   }
 }
