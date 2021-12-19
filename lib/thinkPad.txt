@@ -19,3 +19,12 @@ the map marker controller or bulk controller will ultimately use the key from th
 
 We will need to restructure the bulk data to include a UID for each entry that matches the marker in each data entry
 That way we can search the bulk data for the key, grab the data, and generate whatever we want from that.
+
+
+
+////////////////////////
+// RIVERPOD MIGRATION //
+////////////////////////
+
+we need to update the bulk data is fetched
+	animation will end and map will show when bulkDataControllerProvider != null

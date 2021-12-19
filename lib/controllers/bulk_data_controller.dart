@@ -11,11 +11,11 @@ class BulkDataController extends ChangeNotifier {
       dataPoint['UID'] = UniqueKey();
       _bulkData.add(dataPoint);
     }
-    notifyListeners();
+
     return _bulkData;
   }
 
   UnmodifiableListView get bulkData {
-    return UnmodifiableListView({});
+    return UnmodifiableListView(_bulkData);
   }
 }

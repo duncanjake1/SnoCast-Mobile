@@ -25,7 +25,8 @@ class MapMarkerController extends ChangeNotifier {
       mapMarkers.add(mapMarker.createMarker());
     }
     _markerList = mapMarkers;
-    notifyListeners();
+
+    // TODO: got rid of notifyListeners. ensure this works
   }
 
   // return map marker list
@@ -41,13 +42,32 @@ class MapMarkerController extends ChangeNotifier {
     if (_currentFocusedMarkerKey != newKey) {
       _currentFocusedMarkerKey = newKey;
     } else {
-		// deFocus the currently focused marker when pressed again
+      // deFocus the currently focused marker when pressed again
       _currentFocusedMarkerKey = null;
     }
-    notifyListeners();
+    // TODO: got rid of notifyListeners. ensure this works
   }
 
   Key? get getCurrentFocusedMarkerKey {
     return _currentFocusedMarkerKey;
+  }
+}
+
+class MapMarker {
+  final LatLng point;
+  final Key key;
+  MapMarker({required this.point, required this.key});
+
+  Marker createMarker() {
+    return Marker(
+      key: key,
+      width: kFocusedMarkerSize + 20,
+      height: kFocusedMarkerSize + 20,
+      point: point,
+      rotate: false,
+      builder: (ctx) => IndividualMarker(
+        key: key,
+      ),
+    );
   }
 }

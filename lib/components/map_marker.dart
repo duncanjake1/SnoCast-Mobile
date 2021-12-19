@@ -1,45 +1,29 @@
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:native_snocast/constants.dart';
 import 'package:native_snocast/controllers/map_marker_controller.dart';
+import 'package:native_snocast/main.dart';
 
-class MapMarker {
-  final LatLng point;
-  final Key key;
-  MapMarker({required this.point, required this.key});
 
-  Marker createMarker() {
-    return Marker(
-      key: key,
-      width: kFocusedMarkerSize + 20,
-      height: kFocusedMarkerSize + 20,
-      point: point,
-      rotate: false,
-      builder: (ctx) => IndividualMarker(
-        key: key,
-      ),
-    );
-  }
-}
-
-class IndividualMarker extends StatefulWidget {
+// TODO: I think we may be able too turn this into a stateless widget, and just rebuild when provider updates
+class IndividualMarker extends ConsumerStatefulWidget {
   final Key key;
   IndividualMarker({required this.key});
 
   @override
-  State<IndividualMarker> createState() => _IndividualMarkerState();
+  _IndividualMarkerState createState() => _IndividualMarkerState();
 }
 
-class _IndividualMarkerState extends State<IndividualMarker> {
+class _IndividualMarkerState extends ConsumerState<IndividualMarker> {
   bool isFocused = false;
 
   @override
   Widget build(BuildContext context) {
-    Key? currentFocusedMarkerKey =
-        Provider.of<MapMarkerController>(context).getCurrentFocusedMarkerKey;
+		final markerController = ref.watch(mapMarkerControllerProvider);
+    Key? currentFocusedMarkerKey = markerController.getCurrentFocusedMarkerKey;
     if (widget.key == currentFocusedMarkerKey) {
       setState(() {
         isFocused = true;
@@ -55,8 +39,8 @@ class _IndividualMarkerState extends State<IndividualMarker> {
         // Set current Marker Key to this widgets key
 		  // also sets currentFocusedMarkerKey to null if widget.key and currentFocusedMarkerKey match
         setState(() {
-          Provider.of<MapMarkerController>(context, listen: false)
-              .setCurrentFocusedMarkerKey = widget.key;
+              markerController.setCurrentFocusedMarkerKey = widget.key;
+							print(markerController.getCurrentFocusedMarkerKey);
         });
       },
       child: Container(
