@@ -2,11 +2,14 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../components/map_marker.dart';
 import 'package:native_snocast/constants.dart';
 
-class MapMarkerController extends ChangeNotifier {
+class MapMarkerController extends StateNotifier<List<Marker>> {
+	MapMarkerController(): super([]);
+
   List<Marker>? _markerList;
   // this key will be use as the 'old marker key'
   // after old marker key has been deactivated, the new key will replace this value
@@ -70,4 +73,11 @@ class MapMarker {
       ),
     );
   }
+}
+
+
+class SelectedMarker extends StateNotifier<Key?> {
+	SelectedMarker(): super(null);
+
+	
 }

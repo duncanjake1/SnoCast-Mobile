@@ -9,15 +9,16 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:native_snocast/main.dart';
 
 // TODO: implement flutter_map_tile_caching to implement offline features
-class MapScreen extends ConsumerWidget{
+class MapScreen extends ConsumerWidget {
   static const String id = 'map_screen';
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-		// TODO: can we make this ref.read??
-		final markerController = ref.watch(mapMarkerControllerProvider);
+    ref.watch(currentFocusedMarkerProvider);
+    // TODO: can we make this ref.read??
+    final markerController = ref.watch(mapMarkerControllerProvider);
 
-  return Scaffold(
+    return Scaffold(
       extendBodyBehindAppBar: true,
       // TODO: consider making appbar fully transparent, and surrounding icons in nice looking container
       appBar: AppBar(

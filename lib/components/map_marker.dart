@@ -3,31 +3,40 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:native_snocast/constants.dart';
 import 'package:native_snocast/main.dart';
+import 'package:native_snocast/routes/map_screen.dart';
 
-final currentFocusedMarkerProvider = StateProvider<Key?>((_) => null);
+// used to populate modal data
+// state is used to handle toggle
 
 // TODO: I think we may be able too turn this into a stateless widget, and just rebuild when provider updates
-// we probably need a local provider for this. currentFocusedMarkerKeyProvider or something
-class IndividualMarker extends ConsumerWidget {
+class IndividualMarker extends ConsumerStatefulWidget {
   final Key key;
   IndividualMarker({required this.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  _IndividualMarkerState createState() => _IndividualMarkerState();
+}
+
+class _IndividualMarkerState extends ConsumerState<IndividualMarker> {
+  @override
+  Widget build(BuildContext context) {
     Key? currentFocusedMarkerKey = ref.watch(currentFocusedMarkerProvider);
-    bool isFocused = this.key == currentFocusedMarkerKey;
+    bool isFocused = widget.key == currentFocusedMarkerKey;
 
-    print('marker says');
-    print(this.key);
-    print('provider says');
-    print(currentFocusedMarkerKey);
-
+		print(widget.key);
+		print(currentFocusedMarkerKey);
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
-        // Set current Marker Key to this widgets key
+        setState(() {
+          isFocused = widget.key == currentFocusedMarkerKey;
+        });
         // also sets currentFocusedMarkerKey to null if widget.key and currentFocusedMarkerKey match
-        currentFocusedMarkerKey = this.key;
+        //currentFocusedMarkerKey = this.key;
+        currentFocusedMarkerKey = widget.key;
+
+        print('we already set the dang state');
+        print(currentFocusedMarkerKey);
       },
       child: Container(
         child: Stack(
