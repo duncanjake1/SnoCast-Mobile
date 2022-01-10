@@ -37,15 +37,16 @@ class _LoadingScreenState extends ConsumerState<LoadingScreen> {
     } else {
 			// build map markers off of bulk data with keys, then push to new screen
       ref
-          .watch(mapMarkerControllerProvider)
-          .generateMapMarkers(bulkDataWithKeys);
+          .watch(mapMarkerControllerProvider);
+					// TODO: refactor file so that generate markers works with provider as shown below
+          // providerName.generateMapMarkers(bulkDataWithKeys);
       // destorys the loading screen and pushes map screen
       Navigator.pushNamedAndRemoveUntil(
           context, MapScreen.id, (route) => false);
     }
   }
 
-	// TODO: change this to a snackbar instead of modalBottomSheet
+	// TODO: refactor to snackbar
   void showConnectionError() {
     setState(() {
       // ensure 'Retrying...' message is hidden

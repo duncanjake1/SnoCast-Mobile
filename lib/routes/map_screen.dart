@@ -6,6 +6,7 @@ import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../components/map_marker.dart';
 import 'package:native_snocast/main.dart';
 
 // TODO: implement flutter_map_tile_caching to implement offline features
@@ -15,8 +16,7 @@ class MapScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(currentFocusedMarkerProvider);
-    // TODO: can we make this ref.read??
-    final markerController = ref.watch(mapMarkerControllerProvider);
+    final markerController = ref.watch(mapMarkerControllerProvider.state).state;
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -70,7 +70,13 @@ class MapScreen extends ConsumerWidget {
             fitBoundsOptions: FitBoundsOptions(
               padding: EdgeInsets.all(50),
             ),
-            markers: markerController.markerList,
+            markers: markerController ??
+                [
+                  Marker(
+                    point: LatLng(0, 0),
+										builder: (ctx) => Container(child: Text('ERR'))
+                  )
+                ],
             // Polygon animation is ugly. Making it transparent.
             polygonOptions: PolygonOptions(
                 borderColor: Color(0x00000000),

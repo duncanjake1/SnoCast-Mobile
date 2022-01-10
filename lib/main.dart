@@ -7,9 +7,9 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:native_snocast/routes/loading_screen.dart';
 import 'package:native_snocast/routes/map_screen.dart';
 
-final bulkDataControllerProvider = StateNotifierProvider<BulkDataController, List<Map>>((_) => BulkDataController());
-final mapMarkerControllerProvider = StateNotifierProvider<MapMarkerController, List<Marker>>((_) => MapMarkerController());
-final currentFocusedMarkerProvider = StateNotifierProvider<SelectedMarker, Key?>((_) => null);
+final bulkDataControllerProvider = StateProvider<List<Map>?>((_) => null);
+final mapMarkerControllerProvider = StateProvider<List<Marker>?>((_) => null);
+final currentFocusedMarkerProvider = StateProvider<Key?>((_) => null);
 
 void main() {
   runApp(ProviderScope(child: MainApp()));
