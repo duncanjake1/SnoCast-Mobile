@@ -16,7 +16,11 @@ class MapScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(currentFocusedMarkerProvider);
-    final markerController = ref.watch(mapMarkerControllerProvider.state).state;
+    final List<Marker> markerController = ref.watch(mapMarkerControllerProvider);
+
+		// TODO: remove prints
+		print('marker is');
+		print(markerController);
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -70,13 +74,7 @@ class MapScreen extends ConsumerWidget {
             fitBoundsOptions: FitBoundsOptions(
               padding: EdgeInsets.all(50),
             ),
-            markers: markerController ??
-                [
-                  Marker(
-                    point: LatLng(0, 0),
-										builder: (ctx) => Container(child: Text('ERR'))
-                  )
-                ],
+            markers: markerController,
             // Polygon animation is ugly. Making it transparent.
             polygonOptions: PolygonOptions(
                 borderColor: Color(0x00000000),

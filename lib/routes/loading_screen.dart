@@ -31,22 +31,19 @@ class _LoadingScreenState extends ConsumerState<LoadingScreen> {
 
     List bulkDataWithKeys =
         BulkDataController().insertKeysAndUpdateData(bulkData);
-    MapMarkerController().generateMapMarkers(bulkDataWithKeys);
     if (bulkData[0].keys.first == 'ERR') {
       showConnectionError();
     } else {
-			// build map markers off of bulk data with keys, then push to new screen
-      ref
-          .watch(mapMarkerControllerProvider);
-					// TODO: refactor file so that generate markers works with provider as shown below
-          // providerName.generateMapMarkers(bulkDataWithKeys);
+      // build map markers off of bulk data with keys, then push to new screen
+      MapMarkerController().generateMapMarkers(bulkDataWithKeys);
+      // providerName.generateMapMarkers(bulkDataWithKeys);
       // destorys the loading screen and pushes map screen
       Navigator.pushNamedAndRemoveUntil(
           context, MapScreen.id, (route) => false);
     }
   }
 
-	// TODO: refactor to snackbar
+  // TODO: refactor to snackbar
   void showConnectionError() {
     setState(() {
       // ensure 'Retrying...' message is hidden

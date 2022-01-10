@@ -28,8 +28,8 @@ class MapMarkerController extends StateNotifier<List<Marker>> {
       mapMarkers.add(mapMarker.createMarker());
     }
     _markerList = mapMarkers;
-
-    // TODO: got rid of notifyListeners. ensure this works
+		state = mapMarkers;
+		print(state);
   }
 
   // return map marker list
