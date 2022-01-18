@@ -21,10 +21,10 @@ class _LoadingScreenState extends ConsumerState<LoadingScreen> {
 
   void initState() {
     super.initState();
-    getBulkData();
+    getBulkData(ref);
   }
 
-  void getBulkData() async {
+  void getBulkData(WidgetRef ref) async {
     NetworkHelper networkHelper =
         NetworkHelper(url: kBaseURL + kAccidentEndpoint);
     var bulkData = await networkHelper.getData();
@@ -35,7 +35,7 @@ class _LoadingScreenState extends ConsumerState<LoadingScreen> {
       showConnectionError();
     } else {
       // build map markers off of bulk data with keys, then push to new screen
-      MapMarkerController().generateMapMarkers(bulkDataWithKeys);
+      ref.read(mapMarkerControllerProvider.notifier).generateMapMarkers(bulkDataWithKeys);
       // providerName.generateMapMarkers(bulkDataWithKeys);
       // destorys the loading screen and pushes map screen
       Navigator.pushNamedAndRemoveUntil(
@@ -76,7 +76,7 @@ class _LoadingScreenState extends ConsumerState<LoadingScreen> {
                       connectionIsRetrying = true;
                     });
                     // Retry connection
-                    getBulkData();
+                    getBulkData(ref);
                     Navigator.pop(context);
                   },
                 )

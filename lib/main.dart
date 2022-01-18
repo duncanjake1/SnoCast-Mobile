@@ -8,7 +8,7 @@ import 'package:native_snocast/routes/loading_screen.dart';
 import 'package:native_snocast/routes/map_screen.dart';
 
 final bulkDataControllerProvider = StateProvider<List<Map>?>((_) => null);
-final mapMarkerControllerProvider = StateNotifierProvider<MapMarkerController, List<Marker>>((ref) => MapMarkerController());
+final mapMarkerControllerProvider = StateNotifierProvider<MarkerListStateNotifier, MarkerList>((ref) => MarkerListStateNotifier());
 final currentFocusedMarkerProvider = StateProvider<Key?>((_) => null);
 
 void main() {
@@ -30,4 +30,3 @@ class MainApp extends StatelessWidget {
     );
   }
 }
-

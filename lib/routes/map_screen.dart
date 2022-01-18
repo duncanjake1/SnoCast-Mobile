@@ -16,20 +16,15 @@ class MapScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(currentFocusedMarkerProvider);
-    final List<Marker> markerController = ref.watch(mapMarkerControllerProvider);
-
-		// TODO: remove prints
-		print('marker is');
-		print(markerController);
+    final markerController = ref.watch(mapMarkerControllerProvider);
 
     return Scaffold(
       extendBodyBehindAppBar: true,
       // TODO: consider making appbar fully transparent, and surrounding icons in nice looking container
       appBar: AppBar(
-        // elevation = 0 gets rid of appBar shadow
-        elevation: 0,
+        elevation: 0, // removes appbar shadow
         backgroundColor: Color(0x00000000),
-        // create appbar color gradient
+        // appbar color gradient
         flexibleSpace: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -74,13 +69,13 @@ class MapScreen extends ConsumerWidget {
             fitBoundsOptions: FitBoundsOptions(
               padding: EdgeInsets.all(50),
             ),
-            markers: markerController,
-            // Polygon animation is ugly. Making it transparent.
+            markers: markerController.markers,
+            // Polygon animation is unpleasant. Making it transparent/invisible.
             polygonOptions: PolygonOptions(
                 borderColor: Color(0x00000000),
                 color: Color(0x00000000),
                 borderStrokeWidth: 3),
-            // Create button for marker cluster
+            // Button for marker cluster
             builder: (context, markers) {
               return Material(
                 type: MaterialType.transparency,

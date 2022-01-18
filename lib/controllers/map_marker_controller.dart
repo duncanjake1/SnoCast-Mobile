@@ -7,17 +7,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../components/map_marker.dart';
 import 'package:native_snocast/constants.dart';
 
-class MapMarkerController extends StateNotifier<List<Marker>> {
-	MapMarkerController(): super([]);
+class MarkerListStateNotifier extends StateNotifier<MarkerList> {
+  MarkerListStateNotifier([MarkerList? markerList])
+      : super(markerList ?? MarkerList([]));
 
-  List<Marker>? _markerList;
-  // this key will be use as the 'old marker key'
-  // after old marker key has been deactivated, the new key will replace this value
-  Key? _currentFocusedMarkerKey;
-
-  // create list of map markers
   void generateMapMarkers(List bulkData) {
-    List<Marker> mapMarkers = [];
+		List<Marker> generatedMarkers = [];
     for (int i = 0; i < bulkData.length; i++) {
       double lat = double.parse(bulkData[i]['latitude']);
       double long = double.parse(bulkData[i]['longitude']);
@@ -25,35 +20,16 @@ class MapMarkerController extends StateNotifier<List<Marker>> {
 
       MapMarker mapMarker = MapMarker(point: LatLng(lat, long), key: uniqueKey);
 
-      mapMarkers.add(mapMarker.createMarker());
+      generatedMarkers.add(mapMarker.createMarker());
     }
-    _markerList = mapMarkers;
-		state = mapMarkers;
-		print(state);
+			state = MarkerList(generatedMarkers);
   }
+}
 
-  // return map marker list
-  UnmodifiableListView<Marker> get markerList {
-    if (_markerList == null) {
-      return UnmodifiableListView([]);
-    } else {
-      return UnmodifiableListView(_markerList!);
-    }
-  }
+class MarkerList {
+  final List<Marker> markers;
 
-  set setCurrentFocusedMarkerKey(Key newKey) {
-    if (_currentFocusedMarkerKey != newKey) {
-      _currentFocusedMarkerKey = newKey;
-    } else {
-      // deFocus the currently focused marker when pressed again
-      _currentFocusedMarkerKey = null;
-    }
-    // TODO: got rid of notifyListeners. ensure this works
-  }
-
-  Key? get getCurrentFocusedMarkerKey {
-    return _currentFocusedMarkerKey;
-  }
+  MarkerList(this.markers);
 }
 
 class MapMarker {
@@ -75,9 +51,25 @@ class MapMarker {
   }
 }
 
+class CurrentFocusedMarkerStateNotifier
+    extends StateNotifier<CurrentFocusedMarker> {
+  CurrentFocusedMarkerStateNotifier(
+      CurrentFocusedMarker? currentFocusedMarkerKey)
+      : super(currentFocusedMarkerKey ?? CurrentFocusedMarker(null));
 
-class SelectedMarker extends StateNotifier<Key?> {
-	SelectedMarker(): super(null);
-
-	
+  set setCurrentFocusedMarkerKey(Key newKey) {
+    if (state.focusedMarkerKey != newKey) {
+      state = CurrentFocusedMarker(newKey);
+    } else {
+      // deFocus the currently focused marker when pressed again
+      state = CurrentFocusedMarker(null);
+    }
+  }
 }
+
+class CurrentFocusedMarker {
+  final Key? focusedMarkerKey;
+
+  CurrentFocusedMarker(this.focusedMarkerKey);
+}
+
