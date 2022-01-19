@@ -15,7 +15,6 @@ class MapScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.watch(currentFocusedMarkerProvider);
     final markerController = ref.watch(mapMarkerControllerProvider);
 
     return Scaffold(
@@ -52,6 +51,7 @@ class MapScreen extends ConsumerWidget {
       body: FlutterMap(
         options: MapOptions(
           zoom: 4,
+					center: LatLng(37, -108),
           plugins: [
             MarkerClusterPlugin(),
           ],

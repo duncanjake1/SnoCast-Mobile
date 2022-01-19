@@ -35,7 +35,9 @@ class _LoadingScreenState extends ConsumerState<LoadingScreen> {
       showConnectionError();
     } else {
       // build map markers off of bulk data with keys, then push to new screen
-      ref.read(mapMarkerControllerProvider.notifier).generateMapMarkers(bulkDataWithKeys);
+      ref
+          .read(mapMarkerControllerProvider.notifier)
+          .generateMapMarkers(bulkDataWithKeys);
       // providerName.generateMapMarkers(bulkDataWithKeys);
       // destorys the loading screen and pushes map screen
       Navigator.pushNamedAndRemoveUntil(
@@ -43,13 +45,13 @@ class _LoadingScreenState extends ConsumerState<LoadingScreen> {
     }
   }
 
-  // TODO: refactor to snackbar
   void showConnectionError() {
     setState(() {
       // ensure 'Retrying...' message is hidden
       connectionIsRetrying = false;
     });
 
+    // TODO: refactor to snackbar
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {

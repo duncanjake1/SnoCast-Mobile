@@ -11,7 +11,6 @@ final bulkDataControllerProvider = StateProvider<List<Map>?>((_) => null);
 final mapMarkerControllerProvider =
     StateNotifierProvider<MarkerListStateNotifier, MarkerList>(
         (ref) => MarkerListStateNotifier());
-final currentFocusedMarkerProvider = StateProvider<Key?>((_) => null);
 
 void main() {
   runApp(ProviderScope(child: MainApp()));
