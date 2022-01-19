@@ -1,7 +1,10 @@
 import 'dart:collection';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class BulkDataController extends ChangeNotifier {
+class BulkDataController extends StateNotifier<List<Map>> {
+	BulkDataController(): super([]);
+
   List<Map> _bulkData = [];
 
   List insertKeysAndUpdateData(List dataSet) {

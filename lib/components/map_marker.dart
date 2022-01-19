@@ -1,47 +1,25 @@
+import 'package:latlong2/latlong.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:flutter/material.dart';
-import 'package:latlong2/latlong.dart';
-import 'package:flutter_map/flutter_map.dart';
 import 'package:native_snocast/constants.dart';
-import 'package:native_snocast/controllers/map_marker_controller.dart';
-import 'package:native_snocast/main.dart';
 
+final _currentFocusedMarkerProvider = StateProvider<Key>((ref) => UniqueKey());
 
 // TODO: I think we may be able too turn this into a stateless widget, and just rebuild when provider updates
-class IndividualMarker extends ConsumerStatefulWidget {
+class IndividualMarker extends ConsumerWidget {
   final Key key;
-  IndividualMarker({required this.key});
+  final LatLng point;
+  IndividualMarker({required this.key, required this.point});
 
   @override
-  _IndividualMarkerState createState() => _IndividualMarkerState();
-}
-
-class _IndividualMarkerState extends ConsumerState<IndividualMarker> {
-  bool isFocused = false;
-
-  @override
-  Widget build(BuildContext context) {
-		final markerController = ref.watch(mapMarkerControllerProvider);
-    Key? currentFocusedMarkerKey = markerController.getCurrentFocusedMarkerKey;
-    if (widget.key == currentFocusedMarkerKey) {
-      setState(() {
-        isFocused = true;
-      });
-    } else {
-      setState(() {
-        isFocused = false;
-      });
-    }
+  Widget build(BuildContext context, WidgetRef ref) {
+    Key currentFocusedMarkerKey = ref.watch(_currentFocusedMarkerProvider);
+    bool isFocused = key == currentFocusedMarkerKey;
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
-        // Set current Marker Key to this widgets key
-		  // also sets currentFocusedMarkerKey to null if widget.key and currentFocusedMarkerKey match
-        setState(() {
-              markerController.setCurrentFocusedMarkerKey = widget.key;
-							print(markerController.getCurrentFocusedMarkerKey);
-        });
+        ref.read(_currentFocusedMarkerProvider.notifier).state = key;
       },
       child: Container(
         child: Stack(
