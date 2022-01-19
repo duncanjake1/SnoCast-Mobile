@@ -1,22 +1,17 @@
-import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../components/map_marker.dart';
 import 'package:native_snocast/constants.dart';
 
-class MapMarkerController extends ChangeNotifier {
-  List<Marker>? _markerList;
-  // this key will be use as the 'old marker key'
-  // after old marker key has been deactivated, the new key will replace this value
-  Key? _currentFocusedMarkerKey;
-  // initialize point here. Point will be updated on marker onFocus
-  LatLng _centerPoint = LatLng(37, -108);
+class MarkerListStateNotifier extends StateNotifier<MarkerList> {
+  MarkerListStateNotifier([MarkerList? markerList])
+      : super(markerList ?? MarkerList([]));
 
-  // create list of map markers
   void generateMapMarkers(List bulkData) {
-    List<Marker> mapMarkers = [];
+    List<Marker> generatedMarkers = [];
     for (int i = 0; i < bulkData.length; i++) {
       double lat = double.parse(bulkData[i]['latitude']);
       double long = double.parse(bulkData[i]['longitude']);
@@ -24,41 +19,34 @@ class MapMarkerController extends ChangeNotifier {
 
       MapMarker mapMarker = MapMarker(point: LatLng(lat, long), key: uniqueKey);
 
-      mapMarkers.add(mapMarker.createMarker());
+      generatedMarkers.add(mapMarker.createMarker());
     }
-    _markerList = mapMarkers;
-    notifyListeners();
+    state = MarkerList(generatedMarkers);
   }
+}
 
-  // return map marker list
-  UnmodifiableListView<Marker> get markerList {
-    if (_markerList == null) {
-      return UnmodifiableListView([]);
-    } else {
-      return UnmodifiableListView(_markerList!);
-    }
-  }
+class MarkerList {
+  final List<Marker> markers;
 
-  set setCurrentFocusedMarkerKey(Key newKey) {
-    if (_currentFocusedMarkerKey != newKey) {
-      _currentFocusedMarkerKey = newKey;
-    } else {
-		// deFocus the currently focused marker when pressed again
-      _currentFocusedMarkerKey = null;
-    }
-    notifyListeners();
-  }
+  MarkerList(this.markers);
+}
 
-  Key? get getCurrentFocusedMarkerKey {
-    return _currentFocusedMarkerKey;
-  }
+class MapMarker {
+  final LatLng point;
+  final Key key;
+  MapMarker({required this.point, required this.key});
 
-  set centerMarkerInMap(LatLng point){
-	_centerPoint = point;
-	notifyListeners();
-  }
-
-  LatLng get centerPoint {
-	  return _centerPoint;
+  Marker createMarker() {
+    return Marker(
+      key: key,
+      width: kFocusedMarkerSize + 20,
+      height: kFocusedMarkerSize + 20,
+      point: point,
+      rotate: false,
+      builder: (ctx) => IndividualMarker(
+        key: key,
+        point: point,
+      ),
+    );
   }
 }

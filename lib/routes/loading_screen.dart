@@ -1,40 +1,43 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:native_snocast/constants.dart';
 import 'package:native_snocast/components/animated_snowflake.dart';
 import 'package:native_snocast/routes/map_screen.dart';
 import 'package:native_snocast/services/networking.dart';
-import 'package:native_snocast/controllers/map_marker_controller.dart';
 import 'package:native_snocast/controllers/bulk_data_controller.dart';
 
-class LoadingScreen extends StatefulWidget {
+
+class LoadingScreen extends ConsumerStatefulWidget {
   static const String id = 'loading_screen';
 
   @override
   _LoadingScreenState createState() => _LoadingScreenState();
 }
 
-class _LoadingScreenState extends State<LoadingScreen> {
+class _LoadingScreenState extends ConsumerState<LoadingScreen> {
   bool connectionIsRetrying = false;
 
   void initState() {
     super.initState();
-    getBulkData();
+    getBulkData(ref);
   }
 
-  void getBulkData() async {
+  void getBulkData(WidgetRef ref) async {
     NetworkHelper networkHelper =
         NetworkHelper(url: kBaseURL + kAccidentEndpoint);
     var bulkData = await networkHelper.getData();
+
     List bulkDataWithKeys =
-        Provider.of<BulkDataController>(context, listen: false)
-            .insertKeysAndUpdateData(bulkData);
-    Provider.of<MapMarkerController>(context, listen: false)
-        .generateMapMarkers(bulkDataWithKeys);
+        BulkDataController().insertKeysAndUpdateData(bulkData);
     if (bulkData[0].keys.first == 'ERR') {
       showConnectionError();
     } else {
+      // build map markers off of bulk data with keys, then push to new screen
+      ref
+          .read(mapMarkerControllerProvider.notifier)
+          .generateMapMarkers(bulkDataWithKeys);
+      // providerName.generateMapMarkers(bulkDataWithKeys);
       // destorys the loading screen and pushes map screen
       Navigator.pushNamedAndRemoveUntil(
           context, MapScreen.id, (route) => false);
@@ -47,6 +50,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
       connectionIsRetrying = false;
     });
 
+    // TODO: refactor to snackbar
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
@@ -73,7 +77,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
                       connectionIsRetrying = true;
                     });
                     // Retry connection
-                    getBulkData();
+                    getBulkData(ref);
                     Navigator.pop(context);
                   },
                 )

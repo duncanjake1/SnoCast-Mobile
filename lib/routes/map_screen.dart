@@ -1,168 +1,31 @@
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:native_snocast/controllers/map_marker_controller.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+final mapMarkerControllerProvider =
+    StateNotifierProvider<MarkerListStateNotifier, MarkerList>(
+        (ref) => MarkerListStateNotifier());
+
 // TODO: implement flutter_map_tile_caching to implement offline features
-class MapScreen extends StatefulWidget {
+class MapScreen extends ConsumerWidget {
   static const String id = 'map_screen';
 
   @override
-  State<MapScreen> createState() => _MapScreenState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final markerController = ref.watch(mapMarkerControllerProvider);
 
-class _MapScreenState extends State<MapScreen> {
-  @override
-  showMenu() {
-    showModalBottomSheet(
-        context: context,
-        builder: (BuildContext context) {
-          return Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(16.0),
-                topRight: Radius.circular(16.0),
-              ),
-              color: Color(0xff232f34),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: <Widget>[
-                Container(
-                  height: 36,
-                ),
-                SizedBox(
-                    height: (56 * 6).toDouble(),
-                    child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(16.0),
-                            topRight: Radius.circular(16.0),
-                          ),
-                          color: Color(0xff344955),
-                        ),
-                        child: Stack(
-                          alignment: Alignment(0, 0),
-                          clipBehavior: Clip.none,
-                          children: <Widget>[
-                            Positioned(
-                              top: -36,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(50)),
-                                    border: Border.all(
-                                        color: Color(0xff232f34), width: 10)),
-                                child: Center(
-                                  child: ClipOval(
-                                    child: SvgPicture.asset(
-                                      "assets/snowflake.svg",
-                                      color: Colors.white,
-                                      height: 30.0,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Positioned(
-                              child: ListView(
-                                physics: NeverScrollableScrollPhysics(),
-                                children: <Widget>[
-                                  ListTile(
-                                    title: Text(
-                                      "Inbox",
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                    leading: Icon(
-                                      Icons.inbox,
-                                      color: Colors.white,
-                                    ),
-                                    onTap: () {},
-                                  ),
-                                  ListTile(
-                                    title: Text(
-                                      "Starred",
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                    leading: Icon(
-                                      Icons.star_border,
-                                      color: Colors.white,
-                                    ),
-                                    onTap: () {},
-                                  ),
-                                  ListTile(
-                                    title: Text(
-                                      "Sent",
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                    leading: Icon(
-                                      Icons.send,
-                                      color: Colors.white,
-                                    ),
-                                    onTap: () {},
-                                  ),
-                                  ListTile(
-                                    title: Text(
-                                      "Trash",
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                    leading: Icon(
-                                      Icons.delete_outline,
-                                      color: Colors.white,
-                                    ),
-                                    onTap: () {},
-                                  ),
-                                  ListTile(
-                                    title: Text(
-                                      "Spam",
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                    leading: Icon(
-                                      Icons.error,
-                                      color: Colors.white,
-                                    ),
-                                    onTap: () {},
-                                  ),
-                                  ListTile(
-                                    title: Text(
-                                      "Drafts",
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                    leading: Icon(
-                                      Icons.mail_outline,
-                                      color: Colors.white,
-                                    ),
-                                    onTap: () {},
-                                  ),
-                                ],
-                              ),
-                            )
-                          ],
-                        ))),
-                Container(
-                  height: 56,
-                  color: Color(0xff4a6572),
-                )
-              ],
-            ),
-          );
-        });
-  }
-
-  Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
       // TODO: consider making appbar fully transparent, and surrounding icons in nice looking container
       appBar: AppBar(
-        // elevation = 0 gets rid of appBar shadow
-        elevation: 0,
+        elevation: 0, // removes appbar shadow
         backgroundColor: Color(0x00000000),
-        // create appbar color gradient
+        // appbar color gradient
         flexibleSpace: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -189,10 +52,8 @@ class _MapScreenState extends State<MapScreen> {
       ),
       body: FlutterMap(
         options: MapOptions(
-          // TODO: make map center slightly beneath map marker onFocus
-          center: Provider.of<MapMarkerController>(context, listen: true)
-              .centerPoint,
           zoom: 4,
+					center: LatLng(37, -108),
           plugins: [
             MarkerClusterPlugin(),
           ],
@@ -209,14 +70,13 @@ class _MapScreenState extends State<MapScreen> {
             fitBoundsOptions: FitBoundsOptions(
               padding: EdgeInsets.all(50),
             ),
-            markers: Provider.of<MapMarkerController>(context, listen: false)
-                .markerList,
-            // Polygon animation is ugly. Making it transparent.
+            markers: markerController.markers,
+            // Polygon animation is unpleasant. Making it transparent/invisible.
             polygonOptions: PolygonOptions(
                 borderColor: Color(0x00000000),
                 color: Color(0x00000000),
                 borderStrokeWidth: 3),
-            // Create button for marker cluster
+            // Button for marker cluster
             builder: (context, markers) {
               return Material(
                 type: MaterialType.transparency,
