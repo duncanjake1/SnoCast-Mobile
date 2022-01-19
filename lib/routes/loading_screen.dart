@@ -3,11 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:native_snocast/constants.dart';
 import 'package:native_snocast/components/animated_snowflake.dart';
-import 'package:native_snocast/main.dart';
 import 'package:native_snocast/routes/map_screen.dart';
 import 'package:native_snocast/services/networking.dart';
-import 'package:native_snocast/controllers/map_marker_controller.dart';
 import 'package:native_snocast/controllers/bulk_data_controller.dart';
+
 
 class LoadingScreen extends ConsumerStatefulWidget {
   static const String id = 'loading_screen';

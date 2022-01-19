@@ -1,4 +1,3 @@
-import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -50,26 +49,4 @@ class MapMarker {
       ),
     );
   }
-}
-
-class CurrentFocusedMarkerStateNotifier
-    extends StateNotifier<CurrentFocusedMarker> {
-  CurrentFocusedMarkerStateNotifier(
-      CurrentFocusedMarker? currentFocusedMarkerKey)
-      : super(currentFocusedMarkerKey ?? CurrentFocusedMarker(null));
-
-  set setCurrentFocusedMarkerKey(Key newKey) {
-    if (state.focusedMarkerKey != newKey) {
-      state = CurrentFocusedMarker(newKey);
-    } else {
-      // deFocus the currently focused marker when pressed again
-      state = CurrentFocusedMarker(null);
-    }
-  }
-}
-
-class CurrentFocusedMarker {
-  final Key? focusedMarkerKey;
-
-  CurrentFocusedMarker(this.focusedMarkerKey);
 }

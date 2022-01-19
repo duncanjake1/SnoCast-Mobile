@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:flutter/material.dart';
 import 'package:native_snocast/constants.dart';
-import 'package:native_snocast/routes/map_screen.dart';
 
 final _currentFocusedMarkerProvider = StateProvider<Key>((ref) => UniqueKey());
 

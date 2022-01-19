@@ -6,8 +6,10 @@ import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../components/map_marker.dart';
-import 'package:native_snocast/main.dart';
+
+final mapMarkerControllerProvider =
+    StateNotifierProvider<MarkerListStateNotifier, MarkerList>(
+        (ref) => MarkerListStateNotifier());
 
 // TODO: implement flutter_map_tile_caching to implement offline features
 class MapScreen extends ConsumerWidget {
