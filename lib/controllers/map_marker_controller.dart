@@ -12,7 +12,7 @@ class MarkerListStateNotifier extends StateNotifier<MarkerList> {
       : super(markerList ?? MarkerList([]));
 
   void generateMapMarkers(List bulkData) {
-		List<Marker> generatedMarkers = [];
+    List<Marker> generatedMarkers = [];
     for (int i = 0; i < bulkData.length; i++) {
       double lat = double.parse(bulkData[i]['latitude']);
       double long = double.parse(bulkData[i]['longitude']);
@@ -22,7 +22,7 @@ class MarkerListStateNotifier extends StateNotifier<MarkerList> {
 
       generatedMarkers.add(mapMarker.createMarker());
     }
-			state = MarkerList(generatedMarkers);
+    state = MarkerList(generatedMarkers);
   }
 }
 
@@ -46,6 +46,7 @@ class MapMarker {
       rotate: false,
       builder: (ctx) => IndividualMarker(
         key: key,
+        point: point,
       ),
     );
   }
@@ -72,4 +73,3 @@ class CurrentFocusedMarker {
 
   CurrentFocusedMarker(this.focusedMarkerKey);
 }
-
