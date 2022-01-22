@@ -2,6 +2,8 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:native_snocast/controllers/summary_info_controller.dart';
+
 // TODO: refactor the insertKeys method and use elsewhere
 // Might still need bulk data controller to handle divying out data to individual repositories
 // But there might be a better way to go about that as well... something to consider
@@ -20,6 +22,12 @@ class AccidentReportsStateNotifier extends StateNotifier<AccidentReports> {
     }
 
     state = AccidentReports(_reports);
+  }
+
+  SummaryInfo generateSummaryInfo(Key selectedMarkerKey) {
+    // TODO: filter through state to get summary related info
+    // this method will only be called if the selectedMarkerKey is not null
+    return SummaryInfo({});
   }
 }
 

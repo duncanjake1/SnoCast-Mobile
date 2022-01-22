@@ -1,16 +1,25 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
+import 'package:native_snocast/components/map_marker.dart';
 
 import 'package:native_snocast/controllers/map_marker_controller.dart';
 import 'package:native_snocast/components/summary_bottom_sheet.dart';
+import 'package:native_snocast/controllers/summary_info_controller.dart';
+import 'package:native_snocast/routes/loading_screen.dart';
 
 final mapMarkerControllerProvider =
     StateNotifierProvider<MarkerListStateNotifier, MarkerList>(
         (_) => MarkerListStateNotifier());
+
+final summaryInfoProvider =
+    StateNotifierProvider<SummaryInfoStateNotifier, SummaryInfo>((ref) {
+  return SummaryInfoStateNotifier(ref);
+});
 
 // TODO: implement flutter_map_tile_caching to implement offline features
 class MapScreen extends ConsumerWidget {
@@ -160,7 +169,6 @@ class MapScreen extends ConsumerWidget {
     );
   }
 }
-
 
 // TODO: finish this
 // slide up modal example

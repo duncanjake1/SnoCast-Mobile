@@ -24,6 +24,10 @@ class IndividualMarker extends ConsumerWidget {
         if (selectedMarkerKey == markerKey) {
           ref.read(currentFocusedMarkerProvider.notifier).state = null;
         } else {
+          // OPTION 1: call summary info controller method from here
+          // summary info controller would make call to accident report controller and get summary data back
+          // if currentFocusedMarkerProvide != null, show summaryDrawer and populate with summary data
+          // if currentFocusedMarkerProvide == null, do not make call to accident report controller and ensure summaryDrawer is hidden
           ref.read(currentFocusedMarkerProvider.notifier).state = markerKey;
         }
       },
