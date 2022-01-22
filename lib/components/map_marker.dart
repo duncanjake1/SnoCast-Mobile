@@ -8,18 +8,24 @@ import 'package:native_snocast/controllers/summary_info_controller.dart';
 final currentFocusedMarkerProvider = StateProvider<Key?>((ref) => null);
 
 class IndividualMarker extends ConsumerWidget {
-  final Key key;
+  final Key markerKey;
   final LatLng point;
-  IndividualMarker({required this.key, required this.point});
+  IndividualMarker({required this.markerKey, required this.point});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     Key? currentFocusedMarkerKey = ref.watch(currentFocusedMarkerProvider);
-    bool isFocused = key == currentFocusedMarkerKey;
+    bool isFocused = markerKey == currentFocusedMarkerKey;
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
-        ref.read(currentFocusedMarkerProvider.notifier).state = key;
+        Key? selectedMarkerKey =
+            ref.read(currentFocusedMarkerProvider.notifier).state;
+        if (selectedMarkerKey == markerKey) {
+          ref.read(currentFocusedMarkerProvider.notifier).state = null;
+        } else {
+          ref.read(currentFocusedMarkerProvider.notifier).state = markerKey;
+        }
       },
       child: Container(
         child: Stack(

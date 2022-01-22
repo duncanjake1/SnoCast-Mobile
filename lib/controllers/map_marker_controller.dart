@@ -47,7 +47,7 @@ class MapMarker {
       point: point,
       rotate: false,
       builder: (ctx) => IndividualMarker(
-        key: key,
+        markerKey: key,
         point: point,
       ),
     );
