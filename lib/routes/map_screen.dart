@@ -1,11 +1,12 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:native_snocast/controllers/map_marker_controller.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 
-import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:native_snocast/controllers/map_marker_controller.dart';
+import 'package:native_snocast/components/summary_bottom_sheet.dart';
 
 final mapMarkerControllerProvider =
     StateNotifierProvider<MarkerListStateNotifier, MarkerList>(
@@ -18,6 +19,14 @@ class MapScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final markerController = ref.watch(mapMarkerControllerProvider);
+
+    showMenu() {
+      showModalBottomSheet(
+          context: context,
+          builder: (BuildContext context) {
+            return SummaryBottomSheet();
+          });
+    }
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -48,6 +57,27 @@ class MapScreen extends ConsumerWidget {
               height: 70.0,
             ),
           ),
+        ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        elevation: 0,
+        color: Color(0xff344955),
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 10.0),
+          height: 56.0,
+          child: Row(children: <Widget>[
+            IconButton(
+              onPressed: showMenu,
+              icon: Icon(Icons.menu),
+              color: Colors.white,
+            ),
+            Spacer(),
+            IconButton(
+              onPressed: () {},
+              icon: Icon(Icons.add),
+              color: Colors.white,
+            )
+          ]),
         ),
       ),
       body: FlutterMap(
@@ -130,6 +160,7 @@ class MapScreen extends ConsumerWidget {
     );
   }
 }
+
 
 // TODO: finish this
 // slide up modal example
