@@ -4,8 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:native_snocast/routes/loading_screen.dart';
 import 'package:native_snocast/routes/map_screen.dart';
 
-final bulkDataControllerProvider = StateProvider<List<Map>?>((_) => null);
-
 void main() {
   runApp(ProviderScope(child: MainApp()));
 }

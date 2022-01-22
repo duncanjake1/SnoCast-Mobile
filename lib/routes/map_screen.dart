@@ -9,7 +9,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 final mapMarkerControllerProvider =
     StateNotifierProvider<MarkerListStateNotifier, MarkerList>(
-        (ref) => MarkerListStateNotifier());
+        (_) => MarkerListStateNotifier());
 
 // TODO: implement flutter_map_tile_caching to implement offline features
 class MapScreen extends ConsumerWidget {
@@ -53,7 +53,7 @@ class MapScreen extends ConsumerWidget {
       body: FlutterMap(
         options: MapOptions(
           zoom: 4,
-					center: LatLng(37, -108),
+          center: LatLng(37, -108),
           plugins: [
             MarkerClusterPlugin(),
           ],

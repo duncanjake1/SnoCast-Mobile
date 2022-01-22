@@ -8,7 +8,8 @@
 .buildlog/
 .history
 .svn/
-.vim
+*.vim
+.vscode/
 
 # IntelliJ related
 *.iml

@@ -3,10 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:native_snocast/constants.dart';
 import 'package:native_snocast/components/animated_snowflake.dart';
+import 'package:native_snocast/main.dart';
 import 'package:native_snocast/routes/map_screen.dart';
 import 'package:native_snocast/services/networking.dart';
-import 'package:native_snocast/controllers/bulk_data_controller.dart';
+import 'package:native_snocast/controllers/accident_report_controller.dart';
 
+final accidentReportControllerProvider =
+    StateNotifierProvider<AccidentReportsStateNotifier, AccidentReports>(
+        (_) => AccidentReportsStateNotifier());
 
 class LoadingScreen extends ConsumerStatefulWidget {
   static const String id = 'loading_screen';
@@ -20,24 +24,27 @@ class _LoadingScreenState extends ConsumerState<LoadingScreen> {
 
   void initState() {
     super.initState();
-    getBulkData(ref);
+    getReports(ref);
   }
 
-  void getBulkData(WidgetRef ref) async {
+  void getReports(WidgetRef ref) async {
     NetworkHelper networkHelper =
         NetworkHelper(url: kBaseURL + kAccidentEndpoint);
-    var bulkData = await networkHelper.getData();
+    var reportData = await networkHelper.getData();
 
-    List bulkDataWithKeys =
-        BulkDataController().insertKeysAndUpdateData(bulkData);
-    if (bulkData[0].keys.first == 'ERR') {
+    ref
+        .read(accidentReportControllerProvider.notifier)
+        .insertKeysAndUpdateData(reportData);
+
+    if (reportData[0].keys.first == 'ERR') {
       showConnectionError();
     } else {
       // build map markers off of bulk data with keys, then push to new screen
+      final accidentReportState =
+          ref.read(accidentReportControllerProvider.notifier).state;
       ref
           .read(mapMarkerControllerProvider.notifier)
-          .generateMapMarkers(bulkDataWithKeys);
-      // providerName.generateMapMarkers(bulkDataWithKeys);
+          .generateMapMarkers(AccidentReports(accidentReportState.reportList));
       // destorys the loading screen and pushes map screen
       Navigator.pushNamedAndRemoveUntil(
           context, MapScreen.id, (route) => false);
@@ -77,7 +84,7 @@ class _LoadingScreenState extends ConsumerState<LoadingScreen> {
                       connectionIsRetrying = true;
                     });
                     // Retry connection
-                    getBulkData(ref);
+                    getReports(ref);
                     Navigator.pop(context);
                   },
                 )

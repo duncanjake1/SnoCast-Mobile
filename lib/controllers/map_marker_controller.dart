@@ -5,17 +5,20 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../components/map_marker.dart';
 import 'package:native_snocast/constants.dart';
+import 'package:native_snocast/controllers/accident_report_controller.dart';
 
 class MarkerListStateNotifier extends StateNotifier<MarkerList> {
   MarkerListStateNotifier([MarkerList? markerList])
       : super(markerList ?? MarkerList([]));
 
-  void generateMapMarkers(List bulkData) {
+  void generateMapMarkers(AccidentReports bulkData) {
     List<Marker> generatedMarkers = [];
-    for (int i = 0; i < bulkData.length; i++) {
-      double lat = double.parse(bulkData[i]['latitude']);
-      double long = double.parse(bulkData[i]['longitude']);
-      Key uniqueKey = bulkData[i]['UID'];
+    final List accidentReports = bulkData.reportList;
+
+    for (int i = 0; i < accidentReports.length; i++) {
+      double lat = double.parse(accidentReports[i]['latitude']);
+      double long = double.parse(accidentReports[i]['longitude']);
+      Key uniqueKey = accidentReports[i]['UID'];
 
       MapMarker mapMarker = MapMarker(point: LatLng(lat, long), key: uniqueKey);
 
@@ -44,7 +47,7 @@ class MapMarker {
       point: point,
       rotate: false,
       builder: (ctx) => IndividualMarker(
-        key: key,
+        markerKey: key,
         point: point,
       ),
     );

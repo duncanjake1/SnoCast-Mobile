@@ -3,23 +3,29 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:flutter/material.dart';
 import 'package:native_snocast/constants.dart';
+import 'package:native_snocast/controllers/summary_info_controller.dart';
 
-final _currentFocusedMarkerProvider = StateProvider<Key>((ref) => UniqueKey());
+final currentFocusedMarkerProvider = StateProvider<Key?>((ref) => null);
 
-// TODO: I think we may be able too turn this into a stateless widget, and just rebuild when provider updates
 class IndividualMarker extends ConsumerWidget {
-  final Key key;
+  final Key markerKey;
   final LatLng point;
-  IndividualMarker({required this.key, required this.point});
+  IndividualMarker({required this.markerKey, required this.point});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    Key currentFocusedMarkerKey = ref.watch(_currentFocusedMarkerProvider);
-    bool isFocused = key == currentFocusedMarkerKey;
+    Key? currentFocusedMarkerKey = ref.watch(currentFocusedMarkerProvider);
+    bool isFocused = markerKey == currentFocusedMarkerKey;
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
-        ref.read(_currentFocusedMarkerProvider.notifier).state = key;
+        Key? selectedMarkerKey =
+            ref.read(currentFocusedMarkerProvider.notifier).state;
+        if (selectedMarkerKey == markerKey) {
+          ref.read(currentFocusedMarkerProvider.notifier).state = null;
+        } else {
+          ref.read(currentFocusedMarkerProvider.notifier).state = markerKey;
+        }
       },
       child: Container(
         child: Stack(
