@@ -6,11 +6,11 @@ import 'package:native_snocast/components/animated_snowflake.dart';
 import 'package:native_snocast/main.dart';
 import 'package:native_snocast/routes/map_screen.dart';
 import 'package:native_snocast/services/networking.dart';
-import 'package:native_snocast/controllers/accident_report_controller.dart';
+import 'package:native_snocast/controllers/accident_reports_list_controller.dart';
 
-final accidentReportControllerProvider =
-    StateNotifierProvider<AccidentReportsStateNotifier, AccidentReports>(
-        (_) => AccidentReportsStateNotifier());
+final accidentReportControllerProvider = StateNotifierProvider<
+    AccidentReportsListStateNotifier,
+    AccidentReportsList>((_) => AccidentReportsListStateNotifier());
 
 class LoadingScreen extends ConsumerStatefulWidget {
   static const String id = 'loading_screen';
@@ -42,9 +42,8 @@ class _LoadingScreenState extends ConsumerState<LoadingScreen> {
       // build map markers off of bulk data with keys, then push to new screen
       final accidentReportState =
           ref.read(accidentReportControllerProvider.notifier).state;
-      ref
-          .read(mapMarkerControllerProvider.notifier)
-          .generateMapMarkers(AccidentReports(accidentReportState.reportList));
+      ref.read(mapMarkerControllerProvider.notifier).generateMapMarkers(
+          AccidentReportsList(accidentReportState.reportList));
       // destorys the loading screen and pushes map screen
       Navigator.pushNamedAndRemoveUntil(
           context, MapScreen.id, (route) => false);

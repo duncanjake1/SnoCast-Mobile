@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:flutter/material.dart';
 import 'package:native_snocast/constants.dart';
-import 'package:native_snocast/controllers/summary_info_controller.dart';
+import 'package:native_snocast/routes/map_screen.dart';
 
 final currentFocusedMarkerProvider = StateProvider<Key?>((ref) => null);
 
@@ -16,6 +16,7 @@ class IndividualMarker extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     Key? currentFocusedMarkerKey = ref.watch(currentFocusedMarkerProvider);
     bool isFocused = markerKey == currentFocusedMarkerKey;
+
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
@@ -24,12 +25,9 @@ class IndividualMarker extends ConsumerWidget {
         if (selectedMarkerKey == markerKey) {
           ref.read(currentFocusedMarkerProvider.notifier).state = null;
         } else {
-          // OPTION 1: call summary info controller method from here
-          // summary info controller would make call to accident report controller and get summary data back
-          // if currentFocusedMarkerProvide != null, show summaryDrawer and populate with summary data
-          // if currentFocusedMarkerProvide == null, do not make call to accident report controller and ensure summaryDrawer is hidden
           ref.read(currentFocusedMarkerProvider.notifier).state = markerKey;
         }
+        ref.read(accidentInfoControllerProvider.notifier).getSummaryData();
       },
       child: Container(
         child: Stack(

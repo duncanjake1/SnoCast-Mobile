@@ -1,38 +1,57 @@
-import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:native_snocast/controllers/summary_info_controller.dart';
+import '../components/map_marker.dart';
+import 'package:native_snocast/routes/loading_screen.dart';
 
-// TODO: refactor the insertKeys method and use elsewhere
-// Might still need bulk data controller to handle divying out data to individual repositories
-// But there might be a better way to go about that as well... something to consider
-class AccidentReportsStateNotifier extends StateNotifier<AccidentReports> {
-  AccidentReportsStateNotifier([AccidentReports? reports])
-      : super(reports ?? AccidentReports([]));
+/*
+ * if current focused marker == null, do not show the summary info bottom drawer
+ * if current focused marker != null, grab summary data from the maker with the selected key
+ * 
+ * state == null if there is no currently selected marker
+ * state == map if there is a currently selected marker
+*/
 
-  List<Map> _reports = [];
+class AccidentReportStateNotifier extends StateNotifier<AccidentReport> {
+  AccidentReportStateNotifier(this.read, [AccidentReport? summaryInfo])
+      : super(summaryInfo ?? AccidentReport(null));
 
-  void insertKeysAndUpdateData(List dataSet) {
-    // Adds a Unique Identifier to each data point.
-    // Neccessary to link map markers to the rest of the data
-    for (Map dataPoint in dataSet) {
-      dataPoint['UID'] = UniqueKey();
-      _reports.add(dataPoint);
+  final Reader read;
+
+  /*
+  Method is called when a map marker is tapped
+
+  This method calls the AccidentReportsListStateNotifier
+  which handles filtering and returning the summary specific info
+
+  This logic could be handled directly by calling AccidentReportsListStateNotifier directly
+  BUT: That would mean setting the state of this StateNotifier from another StateNotifier
+  I deemed it more logical to let this StateNotifier handle setting its own state
+  It also makes a little more sense to call this provider when we want to get summary info
+   */
+  void getSummaryData() {
+    // change is detected: check if value is null
+    final Key? currentSelectedMarker =
+        read(currentFocusedMarkerProvider.notifier).state;
+
+    if (currentSelectedMarker == null) {
+      // value is null: close modal, return empty data set
+      state = AccidentReport(null);
+    } else {
+      // value != null: ensure modal is open, call out to accidentSummaryProvider to get summary data
+      final Map summaryInfo = read(accidentReportControllerProvider.notifier)
+          .generateSummaryInfo(currentSelectedMarker);
+      state = AccidentReport(summaryInfo);
     }
-
-    state = AccidentReports(_reports);
-  }
-
-  SummaryInfo generateSummaryInfo(Key selectedMarkerKey) {
-    // TODO: filter through state to get summary related info
-    // this method will only be called if the selectedMarkerKey is not null
-    return SummaryInfo({});
   }
 }
 
-class AccidentReports {
-  List<Map> reportList;
+/* 
+state == null : ensure summary info bottomDrawer is hidden
+state != null : populate and show the summary info bottomDrawer
+*/
+class AccidentReport {
+  final Map? accidentData;
 
-  AccidentReports(this.reportList);
+  AccidentReport(this.accidentData);
 }
