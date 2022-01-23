@@ -10,7 +10,7 @@ import 'package:native_snocast/routes/loading_screen.dart';
  * 
  * state == null if there is no currently selected marker
  * state == map if there is a currently selected marker
-*/
+ */
 
 class AccidentReportStateNotifier extends StateNotifier<AccidentReport> {
   AccidentReportStateNotifier(this.read, [AccidentReport? summaryInfo])
@@ -19,28 +19,26 @@ class AccidentReportStateNotifier extends StateNotifier<AccidentReport> {
   final Reader read;
 
   /*
-  Method is called when a map marker is tapped
-
-  This method calls the AccidentReportsListStateNotifier
-  which handles filtering and returning the summary specific info
-
-  This logic could be handled directly by calling AccidentReportsListStateNotifier directly
-  BUT: That would mean setting the state of this StateNotifier from another StateNotifier
-  I deemed it more logical to let this StateNotifier handle setting its own state
-  It also makes a little more sense to call this provider when we want to get summary info
+   * Method is called when a map marker is tapped
+   *
+   * This method calls the AccidentReportsListStateNotifier
+   * which handles filtering and returning the summary specific info
+   *
+   * This logic could be handled directly by calling AccidentReportsListStateNotifier directly
+   * BUT: That would mean setting the state of this StateNotifier from another StateNotifier
+   * I deemed it more logical to let this StateNotifier handle setting its own state
+   * It also makes a little more sense to call this provider when we want to get summary info
    */
   void getSummaryData() {
-    // change is detected: check if value is null
     final Key? currentSelectedMarker =
         read(currentFocusedMarkerProvider.notifier).state;
 
     if (currentSelectedMarker == null) {
-      // value is null: close modal, return empty data set
       state = AccidentReport(null);
     } else {
-      // value != null: ensure modal is open, call out to accidentSummaryProvider to get summary data
       final Map summaryInfo = read(accidentReportControllerProvider.notifier)
           .generateSummaryInfo(currentSelectedMarker);
+
       state = AccidentReport(summaryInfo);
     }
   }

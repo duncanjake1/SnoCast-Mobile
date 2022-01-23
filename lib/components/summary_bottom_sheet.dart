@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:native_snocast/routes/map_screen.dart';
 import 'package:native_snocast/constants.dart';
 
-class SummaryBottomSheet extends StatelessWidget {
+class SummaryBottomSheet extends ConsumerWidget {
   const SummaryBottomSheet({
     Key? key,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.watch(accidentInfoControllerProvider.notifier);
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.only(
