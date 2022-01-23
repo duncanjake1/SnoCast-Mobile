@@ -3,7 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:flutter/material.dart';
 import 'package:native_snocast/constants.dart';
-import 'package:native_snocast/controllers/summary_info_controller.dart';
+import 'package:native_snocast/routes/map_screen.dart';
+import 'package:native_snocast/components/summary_bottom_sheet.dart';
 
 final currentFocusedMarkerProvider = StateProvider<Key?>((ref) => null);
 
@@ -16,6 +17,18 @@ class IndividualMarker extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     Key? currentFocusedMarkerKey = ref.watch(currentFocusedMarkerProvider);
     bool isFocused = markerKey == currentFocusedMarkerKey;
+
+    showAccidentSummary() {
+      showModalBottomSheet(
+          context: context,
+          builder: (BuildContext context) {
+            return SummaryBottomSheet();
+          }).whenComplete(() {
+        // unselect marker on close
+        ref.read(currentFocusedMarkerProvider.notifier).state = null;
+      });
+    }
+
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
@@ -25,7 +38,10 @@ class IndividualMarker extends ConsumerWidget {
           ref.read(currentFocusedMarkerProvider.notifier).state = null;
         } else {
           ref.read(currentFocusedMarkerProvider.notifier).state = markerKey;
+          // TODO: is it buggy to puth this show modal before the get summary data?
+          showAccidentSummary();
         }
+        ref.read(accidentInfoControllerProvider.notifier).getSummaryData();
       },
       child: Container(
         child: Stack(
