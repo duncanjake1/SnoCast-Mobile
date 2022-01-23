@@ -38,6 +38,7 @@ class IndividualMarker extends ConsumerWidget {
           ref.read(currentFocusedMarkerProvider.notifier).state = null;
         } else {
           ref.read(currentFocusedMarkerProvider.notifier).state = markerKey;
+          // TODO: is it buggy to puth this show modal before the get summary data?
           showAccidentSummary();
         }
         ref.read(accidentInfoControllerProvider.notifier).getSummaryData();
