@@ -30,16 +30,13 @@ class _LoadingScreenState extends ConsumerState<LoadingScreen> {
   void getReports(WidgetRef ref) async {
     NetworkHelper networkHelper =
         NetworkHelper(url: kBaseURL + kAccidentEndpoint);
-    var reportData = await networkHelper.getData();
+    List<Accident> reportData;
+    try {
+      reportData = await networkHelper.fetchData();
+      ref
+          .read(accidentReportControllerProvider.notifier)
+          .insertKeysAndUpdateData(reportData);
 
-    ref
-        .read(accidentReportControllerProvider.notifier)
-        .insertKeysAndUpdateData(reportData);
-
-    if (reportData[0].keys.first == 'ERR') {
-      showConnectionError();
-    } else {
-      // build map markers off of bulk data with keys, then push to new screen
       final accidentReportState =
           ref.read(accidentReportControllerProvider.notifier).state;
       ref.read(mapMarkerControllerProvider.notifier).generateMapMarkers(
@@ -47,6 +44,9 @@ class _LoadingScreenState extends ConsumerState<LoadingScreen> {
       // destorys the loading screen and pushes map screen
       Navigator.pushNamedAndRemoveUntil(
           context, MapScreen.id, (route) => false);
+    } catch (e) {
+      print('Exception Caught: $e');
+      showConnectionError();
     }
   }
 
