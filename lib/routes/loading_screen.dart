@@ -3,10 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:native_snocast/constants.dart';
 import 'package:native_snocast/components/animated_snowflake.dart';
-import 'package:native_snocast/main.dart';
 import 'package:native_snocast/routes/map_screen.dart';
 import 'package:native_snocast/services/networking.dart';
 import 'package:native_snocast/controllers/accident_reports_list_controller.dart';
+import 'package:native_snocast/types/accident.dart';
 
 final accidentReportControllerProvider = StateNotifierProvider<
     AccidentReportsListStateNotifier,
@@ -30,16 +30,11 @@ class _LoadingScreenState extends ConsumerState<LoadingScreen> {
   void getReports(WidgetRef ref) async {
     NetworkHelper networkHelper =
         NetworkHelper(url: kBaseURL + kAccidentEndpoint);
-    var reportData = await networkHelper.getData();
+    List<Accident> reportData;
+    try {
+      List<Accident> reportData = await networkHelper.fetchData();
+      ref.read(accidentReportControllerProvider.notifier).setState(reportData);
 
-    ref
-        .read(accidentReportControllerProvider.notifier)
-        .insertKeysAndUpdateData(reportData);
-
-    if (reportData[0].keys.first == 'ERR') {
-      showConnectionError();
-    } else {
-      // build map markers off of bulk data with keys, then push to new screen
       final accidentReportState =
           ref.read(accidentReportControllerProvider.notifier).state;
       ref.read(mapMarkerControllerProvider.notifier).generateMapMarkers(
@@ -47,6 +42,9 @@ class _LoadingScreenState extends ConsumerState<LoadingScreen> {
       // destorys the loading screen and pushes map screen
       Navigator.pushNamedAndRemoveUntil(
           context, MapScreen.id, (route) => false);
+    } catch (e) {
+      print('Exception Caught: $e');
+      showConnectionError();
     }
   }
 

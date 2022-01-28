@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../components/map_marker.dart';
+import 'package:native_snocast/components/map_marker.dart';
 import 'package:native_snocast/routes/loading_screen.dart';
+import 'package:native_snocast/types/accident.dart';
 
 /*
  * if current focused marker == null, do not show the summary info bottom drawer
@@ -36,8 +37,9 @@ class AccidentReportStateNotifier extends StateNotifier<AccidentReport> {
     if (currentSelectedMarker == null) {
       state = AccidentReport(null);
     } else {
-      final Map summaryInfo = read(accidentReportControllerProvider.notifier)
-          .generateSummaryInfo(currentSelectedMarker);
+      final Accident summaryInfo =
+          read(accidentReportControllerProvider.notifier)
+              .generateSummaryInfo(currentSelectedMarker);
 
       state = AccidentReport(summaryInfo);
     }
@@ -49,7 +51,7 @@ state == null : ensure summary info bottomDrawer is hidden
 state != null : populate and show the summary info bottomDrawer
 */
 class AccidentReport {
-  final Map? accidentData;
+  final Accident? accidentData;
 
   AccidentReport(this.accidentData);
 }

@@ -1,8 +1,7 @@
-import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:native_snocast/controllers/accident_report_controller.dart';
+import 'package:native_snocast/types/accident.dart';
 
 // TODO: refactor the insertKeys method and use elsewhere
 // Might still need bulk data controller to handle divying out data to individual repositories
@@ -14,23 +13,16 @@ class AccidentReportsListStateNotifier
 
   List<Map> _reports = [];
 
-  void insertKeysAndUpdateData(List dataSet) {
-    // Adds a Unique Identifier to each data point.
-    // Neccessary to link map markers to the rest of the data
-    for (Map dataPoint in dataSet) {
-      dataPoint['UID'] = UniqueKey();
-      _reports.add(dataPoint);
-    }
-
-    state = AccidentReportsList(_reports);
+  void setState(List<Accident> dataSet) {
+    state = AccidentReportsList(dataSet);
   }
 
   // this method will only be called if the selectedMarkerKey is not null
-  Map generateSummaryInfo(Key selectedMarkerKey) {
+  Accident generateSummaryInfo(Key selectedMarkerKey) {
     // traverse through bulk data list, grab map with key == selectedMarkerKey
     // return a list containing exactly one map
-    final List<Map> accidentData = state.reportList
-        .where((Map map) => map['UID'] == selectedMarkerKey)
+    final List<Accident> accidentData = state.reportList
+        .where((Accident map) => map.key == selectedMarkerKey)
         .toList();
 
     return accidentData[0];
@@ -38,7 +30,7 @@ class AccidentReportsListStateNotifier
 }
 
 class AccidentReportsList {
-  List<Map> reportList;
+  List<Accident> reportList;
 
   AccidentReportsList(this.reportList);
 }
