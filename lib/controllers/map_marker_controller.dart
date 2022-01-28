@@ -5,8 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../components/map_marker.dart';
 import 'package:native_snocast/constants.dart';
-import 'package:native_snocast/services/networking.dart';
 import 'package:native_snocast/controllers/accident_reports_list_controller.dart';
+import 'package:native_snocast/types/accident.dart';
 
 class MarkerListStateNotifier extends StateNotifier<MarkerList> {
   MarkerListStateNotifier([MarkerList? markerList])

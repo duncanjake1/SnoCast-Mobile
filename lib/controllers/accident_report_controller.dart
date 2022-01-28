@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../components/map_marker.dart';
-import 'package:native_snocast/services/networking.dart';
+import 'package:native_snocast/components/map_marker.dart';
 import 'package:native_snocast/routes/loading_screen.dart';
+import 'package:native_snocast/types/accident.dart';
 
 /*
  * if current focused marker == null, do not show the summary info bottom drawer

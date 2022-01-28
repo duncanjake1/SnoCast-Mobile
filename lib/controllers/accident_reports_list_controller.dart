@@ -1,9 +1,7 @@
-import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:native_snocast/services/networking.dart';
-import 'package:native_snocast/controllers/accident_report_controller.dart';
+import 'package:native_snocast/types/accident.dart';
 
 // TODO: refactor the insertKeys method and use elsewhere
 // Might still need bulk data controller to handle divying out data to individual repositories
