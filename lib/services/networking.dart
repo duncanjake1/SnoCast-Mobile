@@ -1,7 +1,11 @@
 import 'dart:convert';
+import 'dart:async';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class Accident {
+  final Key key;
   final int avalancheNumber;
   final String url;
   final String location;
@@ -19,6 +23,7 @@ class Accident {
   final String auidoUrl;
 
   const Accident({
+    required this.key,
     required this.avalancheNumber,
     required this.url,
     required this.location,
@@ -38,6 +43,7 @@ class Accident {
 
   factory Accident.fromJson(Map<String, dynamic> json) {
     return Accident(
+      key: UniqueKey(),
       avalancheNumber: json['avalanche_number'] as int,
       url: json['url'] as String,
       location: json['location'] as String,
@@ -62,22 +68,21 @@ class NetworkHelper {
 
   final String url;
 
-  List<Accident> parseAccidents(String responseBody) {
-    final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
-
-    final parsedList =
-        parsed.map<Accident>((json) => Accident.fromJson(json)).toList;
-
-    return parsedList;
-  }
-
   Future<List<Accident>> fetchData() async {
     // Try HTTP request. Create Error Responses if unsuccesful
     http.Response response = await http.get(
       Uri.parse(url),
     );
 
-    List<Accident> decodedData = parseAccidents(response.body);
-    return decodedData;
+    return compute(parseAccidents, response.body);
+  }
+
+  List<Accident> parseAccidents(String responseBody) {
+    final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
+
+    final parsedList =
+        parsed.map<Accident>((json) => Accident.fromJson(json)).toList();
+
+    return parsedList;
   }
 }

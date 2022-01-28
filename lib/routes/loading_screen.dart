@@ -32,10 +32,8 @@ class _LoadingScreenState extends ConsumerState<LoadingScreen> {
         NetworkHelper(url: kBaseURL + kAccidentEndpoint);
     List<Accident> reportData;
     try {
-      reportData = await networkHelper.fetchData();
-      ref
-          .read(accidentReportControllerProvider.notifier)
-          .insertKeysAndUpdateData(reportData);
+      List<Accident> reportData = await networkHelper.fetchData();
+      ref.read(accidentReportControllerProvider.notifier).setState(reportData);
 
       final accidentReportState =
           ref.read(accidentReportControllerProvider.notifier).state;

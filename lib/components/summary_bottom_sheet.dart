@@ -83,7 +83,7 @@ class SummaryBottomSheet extends ConsumerWidget {
                                           Icons.date_range_sharp,
                                         ),
                                         title: Text(
-                                          accidentData['date'],
+                                          accidentData.date,
                                           style: TextStyle(color: Colors.white),
                                         ),
                                       ),
@@ -102,7 +102,7 @@ class SummaryBottomSheet extends ConsumerWidget {
                                           Icons.location_on_sharp,
                                         ),
                                         title: Text(
-                                          accidentData['state'],
+                                          accidentData.state,
                                           style: TextStyle(
                                             color: Colors.white,
                                           ),
@@ -117,7 +117,7 @@ class SummaryBottomSheet extends ConsumerWidget {
                                   horizontalTitleGap: 8,
                                   leading: Icon(Icons.warning_sharp),
                                   title: Text(
-                                    accidentData['summary_description'],
+                                    accidentData.summaryDescription,
                                     style: TextStyle(
                                       color: Colors.white,
                                     ),
@@ -129,7 +129,7 @@ class SummaryBottomSheet extends ConsumerWidget {
                                   horizontalTitleGap: 8,
                                   leading: Icon(Icons.landscape_sharp),
                                   title: Text(
-                                    accidentData['location'],
+                                    accidentData.location,
                                     style: TextStyle(
                                       color: Colors.white,
                                     ),
@@ -141,7 +141,7 @@ class SummaryBottomSheet extends ConsumerWidget {
                                   horizontalTitleGap: 8,
                                   leading: Icon(Icons.ac_unit_sharp),
                                   title: Text(
-                                    'Primary Activity: ${accidentData['primary_activity']}',
+                                    'Primary Activity: ${accidentData.primaryActivity}',
                                     style: TextStyle(
                                       color: Colors.white,
                                     ),
@@ -153,7 +153,7 @@ class SummaryBottomSheet extends ConsumerWidget {
                                   horizontalTitleGap: 8,
                                   leading: Icon(Icons.moving_sharp),
                                   title: Text(
-                                    'Travel Mode: ${accidentData['primary_travel_mode']}',
+                                    'Travel Mode: ${accidentData.primaryTravelMode}',
                                     style: TextStyle(
                                       color: Colors.white,
                                     ),
