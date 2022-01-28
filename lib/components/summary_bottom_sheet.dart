@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:native_snocast/routes/map_screen.dart';
+import 'package:native_snocast/routes/audio_screen.dart';
 import 'package:native_snocast/constants.dart';
 
 class SummaryBottomSheet extends ConsumerWidget {
@@ -162,7 +163,8 @@ class SummaryBottomSheet extends ConsumerWidget {
                                 SizedBox(
                                   width: double.infinity,
                                   child: ElevatedButton(
-                                    onPressed: () => print('clicked me'),
+                                    onPressed: () => Navigator.pushNamed(
+                                        context, AudioScreen.id),
                                     child: Text('GET AUDIO'),
                                   ),
                                 )

@@ -41,6 +41,7 @@ class IndividualMarker extends ConsumerWidget {
           // TODO: is it buggy to puth this show modal before the get summary data?
           showAccidentSummary();
         }
+        // get summary data will handle cases where selected marker is null AND not null
         ref.read(accidentInfoControllerProvider.notifier).getSummaryData();
       },
       child: Container(

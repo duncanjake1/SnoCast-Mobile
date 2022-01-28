@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:native_snocast/routes/audio_screen.dart';
 
 import 'package:native_snocast/routes/loading_screen.dart';
 import 'package:native_snocast/routes/map_screen.dart';
@@ -22,6 +23,7 @@ class MainApp extends StatelessWidget {
       routes: {
         LoadingScreen.id: (context) => LoadingScreen(),
         MapScreen.id: (context) => MapScreen(),
+        AudioScreen.id: (context) => AudioScreen(),
       },
       theme: _baseTheme,
     );
